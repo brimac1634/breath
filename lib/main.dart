@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './widgets/particles.dart';
+import './widgets/particle.dart';
 
 import './models/pattern.dart';
 
@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Particles()),
+      body: Center(child: Particle()),
     );
   }
 }
