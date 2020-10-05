@@ -50,7 +50,9 @@ class _ParticleContainerState extends State<ParticleContainer>
         Random().nextDouble() * _maxY * (Random().nextDouble() < 0.5 ? -1 : 1);
 
     _translateController = AnimationController(
-      duration: Duration(milliseconds: (widget.pattern.inhale * 1000).toInt()),
+      duration: Duration(milliseconds: (widget.pattern.exhale * 1000).toInt()),
+      reverseDuration:
+          Duration(milliseconds: (widget.pattern.inhale * 1000).toInt()),
       vsync: this,
     )..addListener(() {
         setState(() {});
@@ -59,7 +61,6 @@ class _ParticleContainerState extends State<ParticleContainer>
     _curve = CurvedAnimation(
         parent: _translateController, curve: Curves.easeInOutSine)
       ..addStatusListener((status) {
-        print(status);
         if (status == AnimationStatus.completed) {
           if (widget.pattern.exhalePause <= 0.0) {
             _translateController.reverse();
@@ -67,7 +68,7 @@ class _ParticleContainerState extends State<ParticleContainer>
             _exhalePauseTimer = Timer(
                 Duration(
                     milliseconds: (widget.pattern.exhalePause * 1000).toInt()),
-                () => _translateController.reverse(from: endTween));
+                () => _translateController.reverse());
           }
         } else if (status == AnimationStatus.dismissed) {
           if (widget.pattern.inhalePause <= 0.0) {
@@ -76,7 +77,7 @@ class _ParticleContainerState extends State<ParticleContainer>
             _inhalePauseTimer = Timer(
                 Duration(
                     milliseconds: (widget.pattern.inhalePause * 1000).toInt()),
-                () => _translateController.forward(from: beginTween));
+                () => _translateController.forward());
           }
         }
       });
