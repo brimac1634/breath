@@ -5,11 +5,9 @@ class Particle extends StatefulWidget {
   _ParticleState createState() => _ParticleState();
 }
 
-class _ParticleState extends State<Particle> with TickerProviderStateMixin {
-  double dx = 1;
-  double dy = 1;
+class _ParticleState extends State<Particle>
+    with SingleTickerProviderStateMixin {
   AnimationController _controller;
-  Animation<Offset> _animation;
 
   @override
   void initState() {
@@ -18,36 +16,23 @@ class _ParticleState extends State<Particle> with TickerProviderStateMixin {
     _controller = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
-    )
-      ..repeat(reverse: true)
-      ..forward();
+    )..repeat();
+  }
 
-    _animation = Tween<Offset>(
-      begin: const Offset(-0.5, 0.0),
-      end: const Offset(0.5, 0.0),
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInCubic,
-    ));
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // return SizedBox(
-    //   width: 20,
-    //   height: 20,
-    //   child: Container(
-    //     decoration: BoxDecoration(
-    //       color: Colors.red,
-    //       borderRadius: BorderRadius.circular(20),
-    //     ),
-    //   ),
-    // );
-    return SlideTransition(
-      position: _animation,
+    return RotationTransition(
+      turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
       child: Container(
-        width: 20,
-        height: 20,
+        width: 14,
+        height: 14,
+        transform: Matrix4.translationValues(20, 0, 0),
         decoration: BoxDecoration(
           color: Colors.red,
           borderRadius: BorderRadius.circular(20),
