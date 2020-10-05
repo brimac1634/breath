@@ -7,6 +7,7 @@ import '../models/pattern.dart';
 
 class ParticleContainer extends StatefulWidget {
   final Pattern pattern;
+  final bool isBreathing;
   final double diameter;
   final int duration;
   final double offset;
@@ -14,6 +15,7 @@ class ParticleContainer extends StatefulWidget {
 
   ParticleContainer(
       {@required this.pattern,
+      @required this.isBreathing,
       @required this.diameter,
       @required this.duration,
       @required this.offset,
@@ -44,16 +46,15 @@ class _ParticleContainerState extends State<ParticleContainer>
     _translateController = AnimationController(
       duration: Duration(milliseconds: widget.pattern.inhale.toInt() * 100),
       vsync: this,
-    )
-      ..addListener(() {
+    )..addListener(() {
         setState(() {});
-      })
-      ..addStatusListener((status) {
-        print(status.toString());
       });
 
     _curve = CurvedAnimation(
-        parent: _translateController, curve: Curves.easeInOutSine);
+        parent: _translateController, curve: Curves.easeInOutSine)
+      ..addStatusListener((status) {
+        // print(status.toString());
+      });
 
     _translation = Tween<double>(
       begin: 1.0,
@@ -61,6 +62,17 @@ class _ParticleContainerState extends State<ParticleContainer>
     ).animate(_curve);
 
     _translateController.repeat(reverse: true);
+  }
+
+  @override
+  void didUpdateWidget(ParticleContainer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isBreathing) {
+      _translateController.stop();
+      _translateController.reset();
+    } else {
+      _translateController.repeat(reverse: true);
+    }
   }
 
   @override
