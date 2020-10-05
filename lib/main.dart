@@ -40,11 +40,11 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Stack(
         children: [
           Particles(
-            quantity: 20,
+            quantity: 30,
             diameter: 6.0,
           ),
           Particles(
-            quantity: 20,
+            quantity: 25,
             diameter: 8.0,
           ),
           Particles(
