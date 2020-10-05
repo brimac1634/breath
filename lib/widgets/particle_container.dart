@@ -60,27 +60,7 @@ class _ParticleContainerState extends State<ParticleContainer>
 
     _curve = CurvedAnimation(
         parent: _translateController, curve: Curves.easeInOutSine)
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          if (widget.pattern.exhalePause <= 0.0) {
-            _translateController.reverse();
-          } else {
-            _exhalePauseTimer = Timer(
-                Duration(
-                    milliseconds: (widget.pattern.exhalePause * 1000).toInt()),
-                () => _translateController.reverse());
-          }
-        } else if (status == AnimationStatus.dismissed) {
-          if (widget.pattern.inhalePause <= 0.0) {
-            _translateController.forward();
-          } else {
-            _inhalePauseTimer = Timer(
-                Duration(
-                    milliseconds: (widget.pattern.inhalePause * 1000).toInt()),
-                () => _translateController.forward());
-          }
-        }
-      });
+      ..addStatusListener(handleAnimationStatus);
 
     _translation = Tween<double>(
       begin: beginTween,
@@ -94,10 +74,10 @@ class _ParticleContainerState extends State<ParticleContainer>
   void didUpdateWidget(ParticleContainer oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.isBreathing) {
+      _translateController.forward();
+    } else {
       _translateController.stop();
       _translateController.reset();
-    } else {
-      _translateController.forward();
     }
   }
 
@@ -107,6 +87,27 @@ class _ParticleContainerState extends State<ParticleContainer>
     _inhalePauseTimer.cancel();
     _exhalePauseTimer.cancel();
     super.dispose();
+  }
+
+  void handleAnimationStatus(AnimationStatus status) {
+    if (!widget.isBreathing) return;
+    if (status == AnimationStatus.completed) {
+      if (widget.pattern.exhalePause <= 0.0) {
+        _translateController.reverse();
+      } else {
+        _exhalePauseTimer = Timer(
+            Duration(milliseconds: (widget.pattern.exhalePause * 1000).toInt()),
+            () => _translateController.reverse());
+      }
+    } else if (status == AnimationStatus.dismissed) {
+      if (widget.pattern.inhalePause <= 0.0) {
+        _translateController.forward();
+      } else {
+        _inhalePauseTimer = Timer(
+            Duration(milliseconds: (widget.pattern.inhalePause * 1000).toInt()),
+            () => _translateController.forward());
+      }
+    }
   }
 
   @override

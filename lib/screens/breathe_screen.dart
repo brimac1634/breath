@@ -12,7 +12,7 @@ class BreatheScreen extends StatefulWidget {
 
 class _BreatheScreenState extends State<BreatheScreen> {
   Pattern _pattern =
-      Pattern(inhale: 5.5, exhale: 5.5, inhalePause: 5, exhalePause: 5);
+      Pattern(inhale: 5.5, exhale: 5.5, inhalePause: 0, exhalePause: 0);
   bool _isBreathing = false;
 
   void toggleBreath() {
