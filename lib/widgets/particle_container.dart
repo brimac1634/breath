@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'dart:async';
 
 import './particle.dart';
 
@@ -26,8 +27,13 @@ class ParticleContainer extends StatefulWidget {
 
 class _ParticleContainerState extends State<ParticleContainer>
     with SingleTickerProviderStateMixin {
+  static const beginTween = 1.0;
+  static const endTween = 0.01;
   double _xOffset;
   double _yOffset;
+
+  Timer _inhalePauseTimer;
+  Timer _exhalePauseTimer;
 
   AnimationController _translateController;
   Animation _curve;
@@ -44,7 +50,7 @@ class _ParticleContainerState extends State<ParticleContainer>
         Random().nextDouble() * _maxY * (Random().nextDouble() < 0.5 ? -1 : 1);
 
     _translateController = AnimationController(
-      duration: Duration(milliseconds: widget.pattern.inhale.toInt() * 100),
+      duration: Duration(milliseconds: (widget.pattern.inhale * 1000).toInt()),
       vsync: this,
     )..addListener(() {
         setState(() {});
@@ -53,15 +59,34 @@ class _ParticleContainerState extends State<ParticleContainer>
     _curve = CurvedAnimation(
         parent: _translateController, curve: Curves.easeInOutSine)
       ..addStatusListener((status) {
-        // print(status.toString());
+        print(status);
+        if (status == AnimationStatus.completed) {
+          if (widget.pattern.exhalePause <= 0.0) {
+            _translateController.reverse();
+          } else {
+            _exhalePauseTimer = Timer(
+                Duration(
+                    milliseconds: (widget.pattern.exhalePause * 1000).toInt()),
+                () => _translateController.reverse(from: endTween));
+          }
+        } else if (status == AnimationStatus.dismissed) {
+          if (widget.pattern.inhalePause <= 0.0) {
+            _translateController.forward();
+          } else {
+            _inhalePauseTimer = Timer(
+                Duration(
+                    milliseconds: (widget.pattern.inhalePause * 1000).toInt()),
+                () => _translateController.forward(from: beginTween));
+          }
+        }
       });
 
     _translation = Tween<double>(
-      begin: 1.0,
-      end: 0.01,
+      begin: beginTween,
+      end: endTween,
     ).animate(_curve);
 
-    _translateController.repeat(reverse: true);
+    // _translateController.forward();
   }
 
   @override
@@ -71,13 +96,15 @@ class _ParticleContainerState extends State<ParticleContainer>
       _translateController.stop();
       _translateController.reset();
     } else {
-      _translateController.repeat(reverse: true);
+      _translateController.forward();
     }
   }
 
   @override
   void dispose() {
     _translateController.dispose();
+    _inhalePauseTimer.cancel();
+    _exhalePauseTimer.cancel();
     super.dispose();
   }
 
