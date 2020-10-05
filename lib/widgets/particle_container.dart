@@ -3,14 +3,18 @@ import 'dart:math';
 
 import './particle.dart';
 
+import '../models/pattern.dart';
+
 class ParticleContainer extends StatefulWidget {
+  final Pattern pattern;
   final double diameter;
   final int duration;
   final double offset;
   final double offsetRadius;
 
   ParticleContainer(
-      {@required this.diameter,
+      {@required this.pattern,
+      @required this.diameter,
       @required this.duration,
       @required this.offset,
       @required this.offsetRadius});
@@ -38,10 +42,14 @@ class _ParticleContainerState extends State<ParticleContainer>
         Random().nextDouble() * _maxY * (Random().nextDouble() < 0.5 ? -1 : 1);
 
     _translateController = AnimationController(
-      duration: Duration(milliseconds: 5500),
+      duration: Duration(milliseconds: widget.pattern.inhale.toInt() * 100),
       vsync: this,
-    )..addListener(() {
+    )
+      ..addListener(() {
         setState(() {});
+      })
+      ..addStatusListener((status) {
+        print(status.toString());
       });
 
     _curve = CurvedAnimation(

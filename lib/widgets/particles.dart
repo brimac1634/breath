@@ -3,11 +3,17 @@ import 'dart:math';
 
 import './particle_container.dart';
 
+import '../models/pattern.dart';
+
 class Particles extends StatelessWidget {
+  final Pattern pattern;
   final int quantity;
   final double diameter;
 
-  Particles({@required this.quantity, @required this.diameter});
+  Particles(
+      {@required this.pattern,
+      @required this.quantity,
+      @required this.diameter});
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +26,7 @@ class Particles extends StatelessWidget {
       (index) {
         return Center(
             child: ParticleContainer(
+          pattern: pattern,
           diameter: diameter,
           duration: (diameter * Random().nextDouble()).toInt() + 2,
           offset: diameter * Random().nextDouble() + (diameter * 0.5),
