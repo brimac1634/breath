@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './widgets/particle.dart';
+import './widgets/particles.dart';
 
 import './models/pattern.dart';
 
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'Breath',
       theme: ThemeData(
         primarySwatch: Colors.teal,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(),
@@ -37,7 +37,23 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Particle()),
+      body: Stack(
+        children: [
+          Particles(
+            quantity: 20,
+            diameter: 6.0,
+          ),
+          Particles(
+            quantity: 20,
+            diameter: 8.0,
+          ),
+          Particles(
+            quantity: 15,
+            diameter: 10.0,
+          )
+        ],
+      ),
+      backgroundColor: Theme.of(context).backgroundColor,
     );
   }
 }
