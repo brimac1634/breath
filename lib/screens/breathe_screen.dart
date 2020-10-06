@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/particles.dart';
+import '../widgets/menu.dart';
 
 import '../models/pattern.dart';
 
@@ -60,7 +61,6 @@ class _BreatheScreenState extends State<BreatheScreen>
         Transform.scale(
           scale: _scale.value,
           child: AnimatedOpacity(
-            // opacity: _showingMenu ? 0.0 : 1.0,
             opacity: _opacity,
             duration: _animationDuration,
             curve: _animationCurve,
@@ -126,6 +126,14 @@ class _BreatheScreenState extends State<BreatheScreen>
               ),
             )
           ]),
+        ),
+        AnimatedOpacity(
+          opacity: 1 - _opacity,
+          duration: _animationDuration,
+          curve: _animationCurve,
+          child: Center(
+            child: Menu(),
+          ),
         )
       ]),
       backgroundColor: Theme.of(context).backgroundColor,

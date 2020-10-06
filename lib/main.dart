@@ -13,7 +13,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Breath',
       theme: ThemeData(
-        primarySwatch: Colors.teal,
+        primaryColor: Colors.white,
+        // textTheme: Theme.of(context).textTheme.apply(
+        //       bodyColor: Colors.white,
+        //       displayColor: Colors.white,
+        //     ),
         backgroundColor: Colors.black,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
