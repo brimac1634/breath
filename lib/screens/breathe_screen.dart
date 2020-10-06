@@ -132,7 +132,14 @@ class _BreatheScreenState extends State<BreatheScreen>
           duration: _animationDuration,
           curve: _animationCurve,
           child: Center(
-            child: Menu(),
+            child: Menu(
+              pattern: _pattern,
+              onPatternChange: (pattern) {
+                setState(() {
+                  _pattern = pattern;
+                });
+              },
+            ),
           ),
         )
       ]),

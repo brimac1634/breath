@@ -14,10 +14,15 @@ class MyApp extends StatelessWidget {
       title: 'Breath',
       theme: ThemeData(
         primaryColor: Colors.white,
-        // textTheme: Theme.of(context).textTheme.apply(
-        //       bodyColor: Colors.white,
-        //       displayColor: Colors.white,
-        //     ),
+        textTheme: TextTheme(
+          bodyText1: TextStyle(color: Colors.white, fontSize: 16.0),
+          subtitle1: TextStyle(color: Colors.blue, fontWeight: FontWeight.w900),
+          headline1: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontFamily: 'Rubik',
+              fontWeight: FontWeight.normal),
+        ),
         backgroundColor: Colors.black,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
