@@ -51,6 +51,25 @@ class _BreatheScreenState extends State<BreatheScreen>
     });
   }
 
+  void _toggleMenu() {
+    if (_showingMenu) {
+      _controller.reverse();
+      setState(() {
+        _opacity = 1.0;
+      });
+    } else {
+      _controller.forward();
+      Future.delayed(Duration(milliseconds: 100), () {
+        setState(() {
+          _opacity = 0.0;
+        });
+      });
+    }
+    setState(() {
+      _showingMenu = !_showingMenu;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // final _screenWidth = MediaQuery.of(context).size.width;
@@ -96,33 +115,16 @@ class _BreatheScreenState extends State<BreatheScreen>
           padding: const EdgeInsets.all(20.0),
           child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             AnimatedOpacity(
-              opacity: _isBreathing ? 0.0 : 1.0,
+              opacity: _isBreathing || _showingMenu ? 0.0 : 1.0,
               duration: const Duration(milliseconds: 300),
-              curve: Curves.elasticOut,
+              curve: Curves.easeInOut,
               child: IconButton(
                 icon: Icon(
                   Icons.settings,
                   color: Colors.white,
                   size: 40.0,
                 ),
-                onPressed: () {
-                  if (_showingMenu) {
-                    _controller.reverse();
-                    setState(() {
-                      _opacity = 1.0;
-                    });
-                  } else {
-                    _controller.forward();
-                    Future.delayed(Duration(milliseconds: 100), () {
-                      setState(() {
-                        _opacity = 0.0;
-                      });
-                    });
-                  }
-                  setState(() {
-                    _showingMenu = !_showingMenu;
-                  });
-                },
+                onPressed: _toggleMenu,
               ),
             )
           ]),
@@ -133,13 +135,15 @@ class _BreatheScreenState extends State<BreatheScreen>
           curve: _animationCurve,
           child: Center(
             child: Menu(
-              pattern: _pattern,
-              onPatternChange: (pattern) {
-                setState(() {
-                  _pattern = pattern;
-                });
-              },
-            ),
+                pattern: _pattern,
+                onPatternChange: (pattern) {
+                  setState(() {
+                    _pattern = pattern;
+                  });
+                },
+                onSave: () {
+                  _toggleMenu();
+                }),
           ),
         )
       ]),

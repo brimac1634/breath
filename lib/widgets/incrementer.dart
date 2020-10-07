@@ -10,7 +10,7 @@ class Incrementer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(6.0),
           border: Border.all(color: Colors.white)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -35,7 +35,7 @@ class Incrementer extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Text(
               value.toString(),
-              style: Theme.of(context).textTheme.headline1,
+              style: Theme.of(context).textTheme.bodyText1,
             ),
           ),
           GestureDetector(
