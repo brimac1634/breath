@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vibration/vibration.dart';
+import 'dart:async';
 import 'dart:math';
 
 import '../widgets/particles.dart';
@@ -22,6 +23,8 @@ class _BreatheScreenState extends State<BreatheScreen>
   bool _isBreathing = false;
   bool _showingMenu = false;
   bool _hasVibrator = false;
+
+  Timer _breathTimer;
   List<int> _vibrationPattern;
 
   AnimationController _controller;
@@ -59,12 +62,19 @@ class _BreatheScreenState extends State<BreatheScreen>
   @override
   void dispose() {
     _controller.dispose();
+    _breathTimer.cancel();
     super.dispose();
   }
 
   void toggleBreath() {
     if (!_isBreathing && _hasVibrator && _vibrationPattern != null) {
-      Vibration.vibrate(pattern: _vibrationPattern);
+      // TODO: set timer to inhale and inhale pause duration before invoking vibration again
+      _breathTimer = Timer.periodic(
+          Duration(
+              milliseconds: (_pattern.exhale + _pattern.exhalePause).toInt() *
+                  1000), (_) {
+        Vibration.vibrate(pattern: _vibrationPattern);
+      });
     }
     setState(() {
       _isBreathing = !_isBreathing;
@@ -76,18 +86,22 @@ class _BreatheScreenState extends State<BreatheScreen>
       double milliseconds,
       double vibrationDuration}) {
     var halfOfDuration = milliseconds / 2;
-    var halfVibrationCount = (halfOfDuration * 0.004).floor();
+    var halfVibrationCount = (halfOfDuration * 0.003).floor();
     var halfDurationLessVibrations =
         halfOfDuration - (halfVibrationCount * vibrationDuration);
     var r = (1 - incrementMultiple) /
         (1 - pow(incrementMultiple, halfVibrationCount));
     var baseInterval = halfDurationLessVibrations * r;
     List<int> halfOfIntervals = [];
+    List<int> secondHalfOfIntervals = [];
     for (var i = 0; i < halfVibrationCount; i++) {
       halfOfIntervals.add(vibrationDuration.floor());
       halfOfIntervals.add((baseInterval * pow(incrementMultiple, i)).floor());
+      secondHalfOfIntervals
+          .add((baseInterval * pow(incrementMultiple, i)).floor());
+      secondHalfOfIntervals.add(vibrationDuration.floor());
     }
-    return [...halfOfIntervals.reversed, ...halfOfIntervals];
+    return [...halfOfIntervals.reversed, ...secondHalfOfIntervals];
   }
 
   void _toggleMenu() {
