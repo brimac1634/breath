@@ -66,8 +66,6 @@ class _ParticleContainerState extends State<ParticleContainer>
       begin: beginTween,
       end: endTween,
     ).animate(_curve);
-
-    // _translateController.forward();
   }
 
   @override
@@ -78,6 +76,15 @@ class _ParticleContainerState extends State<ParticleContainer>
     } else {
       _translateController.stop();
       _translateController.reset();
+    }
+
+    if ((widget.pattern.inhale != oldWidget.pattern.inhale ||
+            widget.pattern.exhale != oldWidget.pattern.exhale) &&
+        _translateController != null) {
+      _translateController.duration =
+          Duration(milliseconds: (widget.pattern.exhale * 1000).toInt());
+      _translateController.reverseDuration =
+          Duration(milliseconds: (widget.pattern.inhale * 1000).toInt());
     }
   }
 

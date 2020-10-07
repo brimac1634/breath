@@ -1,5 +1,5 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:vibration/vibration.dart';
 
 import '../widgets/particles.dart';
 import '../widgets/menu.dart';
@@ -20,6 +20,7 @@ class _BreatheScreenState extends State<BreatheScreen>
   double _opacity = 1.0;
   bool _isBreathing = false;
   bool _showingMenu = false;
+  bool _hasVibrator = false;
 
   AnimationController _controller;
   Animation _curve;
@@ -37,12 +38,22 @@ class _BreatheScreenState extends State<BreatheScreen>
       });
     _curve = CurvedAnimation(parent: _controller, curve: _animationCurve);
     _scale = Tween<double>(begin: 1.0, end: 3.0).animate(_curve);
+
+    _verifyVibration();
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void _verifyVibration() async {
+    var hasVibrator = await Vibration.hasVibrator();
+    print(hasVibrator);
+    setState(() {
+      _hasVibrator = hasVibrator;
+    });
   }
 
   void toggleBreath() {
@@ -133,7 +144,8 @@ class _BreatheScreenState extends State<BreatheScreen>
           opacity: 1 - _opacity,
           duration: _animationDuration,
           curve: _animationCurve,
-          child: Center(
+          child: IgnorePointer(
+            ignoring: !_showingMenu,
             child: Menu(
                 pattern: _pattern,
                 onPatternChange: (pattern) {
