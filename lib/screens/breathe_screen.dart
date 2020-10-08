@@ -23,8 +23,10 @@ class _BreatheScreenState extends State<BreatheScreen>
   bool _isBreathing = false;
   bool _showingMenu = false;
   bool _hasVibrator = false;
+  bool _vibrationEnabled = true;
 
   Timer _breathTimer;
+  Timer _breathInterval;
   List<int> _vibrationPattern;
 
   AnimationController _controller;
@@ -63,18 +65,37 @@ class _BreatheScreenState extends State<BreatheScreen>
   void dispose() {
     _controller.dispose();
     _breathTimer.cancel();
+    _breathInterval.cancel();
     super.dispose();
   }
 
   void toggleBreath() {
-    if (!_isBreathing && _hasVibrator && _vibrationPattern != null) {
-      // TODO: set timer to inhale and inhale pause duration before invoking vibration again
-      _breathTimer = Timer.periodic(
-          Duration(
-              milliseconds: (_pattern.exhale + _pattern.exhalePause).toInt() *
-                  1000), (_) {
-        Vibration.vibrate(pattern: _vibrationPattern);
-      });
+    print(_getVibrationPattern(
+        incrementMultiple: 1.7,
+        milliseconds: _pattern.inhale * 1000,
+        vibrationDuration: 100));
+    if (_hasVibrator && _vibrationEnabled && _vibrationPattern != null) {
+      if (!_isBreathing) {
+        _breathTimer = Timer(
+            Duration(
+                milliseconds: (_pattern.exhale + _pattern.exhalePause).toInt() *
+                    1000), () {
+          Vibration.vibrate(pattern: _vibrationPattern);
+          _breathInterval = Timer.periodic(
+              Duration(
+                  milliseconds: (_pattern.inhale +
+                              _pattern.inhalePause +
+                              _pattern.exhale +
+                              _pattern.exhalePause)
+                          .toInt() *
+                      1000), (_) {
+            Vibration.vibrate(pattern: _vibrationPattern);
+          });
+        });
+      } else {
+        _breathTimer.cancel();
+        _breathInterval.cancel();
+      }
     }
     setState(() {
       _isBreathing = !_isBreathing;
@@ -86,7 +107,7 @@ class _BreatheScreenState extends State<BreatheScreen>
       double milliseconds,
       double vibrationDuration}) {
     var halfOfDuration = milliseconds / 2;
-    var halfVibrationCount = (halfOfDuration * 0.003).floor();
+    var halfVibrationCount = (halfOfDuration * 0.0028).floor();
     var halfDurationLessVibrations =
         halfOfDuration - (halfVibrationCount * vibrationDuration);
     var r = (1 - incrementMultiple) /
@@ -190,6 +211,12 @@ class _BreatheScreenState extends State<BreatheScreen>
             ignoring: !_showingMenu,
             child: Menu(
                 pattern: _pattern,
+                vibrationEnabled: _vibrationEnabled,
+                onVibrationChange: (vibration) {
+                  setState(() {
+                    _vibrationEnabled = vibration;
+                  });
+                },
                 onPatternChange: (pattern) {
                   setState(() {
                     _pattern = pattern;

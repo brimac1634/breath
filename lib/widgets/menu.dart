@@ -6,10 +6,17 @@ import '../models/pattern.dart';
 
 class Menu extends StatelessWidget {
   final Pattern pattern;
+  final bool vibrationEnabled;
+  final Function onVibrationChange;
   final Function onPatternChange;
   final Function onSave;
 
-  Menu({@required this.pattern, @required this.onPatternChange, this.onSave});
+  Menu(
+      {@required this.pattern,
+      @required this.vibrationEnabled,
+      @required this.onVibrationChange,
+      @required this.onPatternChange,
+      this.onSave});
 
   @override
   Widget build(BuildContext context) {
@@ -106,6 +113,29 @@ class Menu extends StatelessWidget {
                         exhale: pattern.exhale,
                         inhalePause: pattern.inhalePause,
                         exhalePause: value));
+                  },
+                )
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Vibration',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.vibration,
+                    color: Colors.white,
+                    size: 50,
+                  ),
+                  onPressed: () {
+                    onVibrationChange(!vibrationEnabled);
                   },
                 )
               ],
