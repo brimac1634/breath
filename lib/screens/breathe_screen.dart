@@ -70,10 +70,6 @@ class _BreatheScreenState extends State<BreatheScreen>
   }
 
   void toggleBreath() {
-    print(_getVibrationPattern(
-        incrementMultiple: 1.7,
-        milliseconds: _pattern.inhale * 1000,
-        vibrationDuration: 100));
     if (_hasVibrator && _vibrationEnabled && _vibrationPattern != null) {
       if (!_isBreathing) {
         _breathTimer = Timer(
@@ -146,88 +142,93 @@ class _BreatheScreenState extends State<BreatheScreen>
 
   @override
   Widget build(BuildContext context) {
-    // final _screenWidth = MediaQuery.of(context).size.width;
-    // final _screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
-      body: Stack(children: [
-        Transform.scale(
-          scale: _scale.value,
-          child: AnimatedOpacity(
-            opacity: _opacity,
-            duration: _animationDuration,
-            curve: _animationCurve,
-            child: GestureDetector(
-              onTap: toggleBreath,
-              behavior: HitTestBehavior.translucent,
-              child: Stack(
-                children: [
-                  Particles(
-                    pattern: _pattern,
-                    isBreathing: _isBreathing,
-                    quantity: 30,
-                    diameter: 6.0,
-                  ),
-                  Particles(
-                    pattern: _pattern,
-                    isBreathing: _isBreathing,
-                    quantity: 25,
-                    diameter: 8.0,
-                  ),
-                  Particles(
-                    pattern: _pattern,
-                    isBreathing: _isBreathing,
-                    quantity: 15,
-                    diameter: 10.0,
-                  ),
-                ],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight,
+              colors: [Color(0xFFeecda3), Color(0xFFef629f)]),
+        ),
+        child: Stack(children: [
+          Transform.scale(
+            scale: _scale.value,
+            child: AnimatedOpacity(
+              opacity: _opacity,
+              duration: _animationDuration,
+              curve: _animationCurve,
+              child: GestureDetector(
+                onTap: toggleBreath,
+                behavior: HitTestBehavior.translucent,
+                child: Stack(
+                  children: [
+                    Particles(
+                      pattern: _pattern,
+                      isBreathing: _isBreathing,
+                      quantity: 40,
+                      diameter: 6.0,
+                    ),
+                    Particles(
+                      pattern: _pattern,
+                      isBreathing: _isBreathing,
+                      quantity: 40,
+                      diameter: 8.0,
+                    ),
+                    Particles(
+                      pattern: _pattern,
+                      isBreathing: _isBreathing,
+                      quantity: 20,
+                      diameter: 10.0,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-            AnimatedOpacity(
-              opacity: _isBreathing || _showingMenu ? 0.0 : 1.0,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              child: IconButton(
-                icon: Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                  size: 40.0,
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              AnimatedOpacity(
+                opacity: _isBreathing || _showingMenu ? 0.0 : 1.0,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.settings,
+                    color: Colors.white,
+                    size: 40.0,
+                  ),
+                  onPressed: _toggleMenu,
                 ),
-                onPressed: _toggleMenu,
-              ),
-            )
-          ]),
-        ),
-        AnimatedOpacity(
-          opacity: 1 - _opacity,
-          duration: _animationDuration,
-          curve: _animationCurve,
-          child: IgnorePointer(
-            ignoring: !_showingMenu,
-            child: Menu(
-                pattern: _pattern,
-                vibrationEnabled: _vibrationEnabled,
-                onVibrationChange: (vibration) {
-                  setState(() {
-                    _vibrationEnabled = vibration;
-                  });
-                },
-                onPatternChange: (pattern) {
-                  setState(() {
-                    _pattern = pattern;
-                  });
-                },
-                onSave: () {
-                  _toggleMenu();
-                }),
+              )
+            ]),
           ),
-        )
-      ]),
+          AnimatedOpacity(
+            opacity: 1 - _opacity,
+            duration: _animationDuration,
+            curve: _animationCurve,
+            child: IgnorePointer(
+              ignoring: !_showingMenu,
+              child: Menu(
+                  pattern: _pattern,
+                  vibrationEnabled: _vibrationEnabled,
+                  onVibrationChange: (vibration) {
+                    setState(() {
+                      _vibrationEnabled = vibration;
+                    });
+                  },
+                  onPatternChange: (pattern) {
+                    setState(() {
+                      _pattern = pattern;
+                    });
+                  },
+                  onSave: () {
+                    _toggleMenu();
+                  }),
+            ),
+          )
+        ]),
+      ),
       backgroundColor: Theme.of(context).backgroundColor,
     );
   }

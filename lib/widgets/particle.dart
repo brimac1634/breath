@@ -17,7 +17,7 @@ class Particle extends StatefulWidget {
 
 class _ParticleState extends State<Particle>
     with SingleTickerProviderStateMixin {
-  static const _colors = [Colors.red, Colors.white, Colors.blue];
+  static const _colors = [Colors.white, Colors.white, Colors.white];
   final _start = Random().nextDouble().round().toDouble();
   final _color = _colors[Random().nextInt(_colors.length)];
   double _offsetX;
