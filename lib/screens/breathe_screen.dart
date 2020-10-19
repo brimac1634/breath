@@ -7,6 +7,7 @@ import 'dart:math';
 
 import '../widgets/particles.dart';
 import '../widgets/menu.dart';
+import '../assets/breathe_icons.dart';
 
 import '../models/pattern.dart';
 
@@ -213,7 +214,7 @@ class _BreatheScreenState extends State<BreatheScreen>
                 curve: Curves.easeInOut,
                 child: IconButton(
                   icon: Icon(
-                    Icons.settings,
+                    BreatheIcons.lungs,
                     color: Colors.white,
                     size: 40.0,
                   ),
