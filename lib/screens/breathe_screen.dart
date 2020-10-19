@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:vibration/vibration.dart';
 import 'dart:async';
@@ -142,15 +144,15 @@ class _BreatheScreenState extends State<BreatheScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.bottomLeft,
-              end: Alignment.topRight,
-              colors: [Color(0xFFeecda3), Color(0xFFef629f)]),
-        ),
-        child: Stack(children: [
+    return WillPopScope(
+      onWillPop: () async {
+        if (_showingMenu) {
+          _toggleMenu();
+          return false;
+        }
+      },
+      child: Scaffold(
+        body: Stack(children: [
           Transform.scale(
             scale: _scale.value,
             child: AnimatedOpacity(
@@ -166,20 +168,37 @@ class _BreatheScreenState extends State<BreatheScreen>
                       pattern: _pattern,
                       isBreathing: _isBreathing,
                       quantity: 40,
-                      diameter: 6.0,
+                      diameter: 4.0,
                     ),
                     Particles(
                       pattern: _pattern,
                       isBreathing: _isBreathing,
                       quantity: 40,
-                      diameter: 8.0,
+                      diameter: 5.0,
                     ),
                     Particles(
                       pattern: _pattern,
                       isBreathing: _isBreathing,
-                      quantity: 20,
-                      diameter: 10.0,
+                      quantity: 30,
+                      diameter: 6.0,
                     ),
+                    AnimatedOpacity(
+                      duration: Duration(milliseconds: 500),
+                      opacity: _isBreathing ? 0.0 : 1.0,
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          child: Center(
+                            child: Text(
+                              'Breathe Out',
+                              style: Theme.of(context).textTheme.headline1,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -228,8 +247,8 @@ class _BreatheScreenState extends State<BreatheScreen>
             ),
           )
         ]),
+        backgroundColor: Theme.of(context).backgroundColor,
       ),
-      backgroundColor: Theme.of(context).backgroundColor,
     );
   }
 }

@@ -124,19 +124,27 @@ class Menu extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  'Vibration',
-                  style: Theme.of(context).textTheme.bodyText1,
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.vibration,
-                    color: Colors.white,
-                    size: 50,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Vibration',
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
-                  onPressed: () {
-                    onVibrationChange(!vibrationEnabled);
-                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: IconButton(
+                    iconSize: 50,
+                    icon: Icon(
+                      Icons.vibration,
+                      color:
+                          vibrationEnabled ? Color(0xfffc00a3) : Colors.white,
+                      size: 50,
+                    ),
+                    onPressed: () {
+                      onVibrationChange(!vibrationEnabled);
+                    },
+                  ),
                 )
               ],
             ),

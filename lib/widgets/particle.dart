@@ -17,7 +17,8 @@ class Particle extends StatefulWidget {
 
 class _ParticleState extends State<Particle>
     with SingleTickerProviderStateMixin {
-  static const _colors = [Colors.white, Colors.white, Colors.white];
+  static const _colors = [Colors.white];
+  static const _shadows = [Color(0xfffc00a3)];
   final _start = Random().nextDouble().round().toDouble();
   final _color = _colors[Random().nextInt(_colors.length)];
   double _offsetX;
@@ -53,9 +54,15 @@ class _ParticleState extends State<Particle>
         height: widget.diameter,
         transform: Matrix4.translationValues(_offsetX, _offsetY, 0),
         decoration: BoxDecoration(
-          color: _color,
-          borderRadius: BorderRadius.circular(20),
-        ),
+            color: _color,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: _shadows[Random().nextInt(_shadows.length)],
+                blurRadius: 10.0,
+                spreadRadius: 1.2,
+              ),
+            ]),
       ),
     );
   }

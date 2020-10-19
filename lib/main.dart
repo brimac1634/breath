@@ -1,4 +1,3 @@
-import 'package:breath/screens/breathe_screen.dart';
 import 'package:flutter/material.dart';
 
 import './screens/breathe_screen.dart';
@@ -18,10 +17,7 @@ class MyApp extends StatelessWidget {
           bodyText1: TextStyle(color: Colors.white, fontSize: 16.0),
           subtitle1: TextStyle(color: Colors.blue, fontWeight: FontWeight.w900),
           headline1: TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontFamily: 'Rubik',
-              fontWeight: FontWeight.normal),
+              color: Colors.white, fontSize: 22, fontWeight: FontWeight.normal),
         ),
         backgroundColor: Colors.black,
         visualDensity: VisualDensity.adaptivePlatformDensity,
