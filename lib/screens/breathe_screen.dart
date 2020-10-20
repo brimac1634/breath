@@ -166,19 +166,19 @@ class _BreatheScreenState extends State<BreatheScreen>
                 Particles(
                   pattern: _pattern,
                   isBreathing: _isBreathing,
-                  quantity: 40,
+                  quantity: 60,
                   diameter: 4.0,
                 ),
                 Particles(
                   pattern: _pattern,
                   isBreathing: _isBreathing,
-                  quantity: 40,
+                  quantity: 60,
                   diameter: 5.0,
                 ),
                 Particles(
                   pattern: _pattern,
                   isBreathing: _isBreathing,
-                  quantity: 30,
+                  quantity: 50,
                   diameter: 6.0,
                 ),
                 BackdropFilter(
@@ -190,7 +190,10 @@ class _BreatheScreenState extends State<BreatheScreen>
                     child: Center(
                         child: Stack(
                       children: [
-                        Text(' '),
+                        Text(
+                          'o',
+                          style: TextStyle(color: Colors.black),
+                        ),
                         AnimatedOpacity(
                           duration: _animationDuration,
                           curve: _animationCurve,
