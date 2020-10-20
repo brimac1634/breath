@@ -18,8 +18,8 @@ class BreatheScreen extends StatefulWidget {
 
 class _BreatheScreenState extends State<BreatheScreen>
     with TickerProviderStateMixin {
-  static const _animationDuration = Duration(milliseconds: 1500);
-  static const _animationCurve = Curves.easeInOutBack;
+  static const _animationDuration = Duration(milliseconds: 500);
+  static const _animationCurve = Curves.easeInOut;
   Pattern _pattern =
       Pattern(inhale: 5.5, exhale: 5.5, inhalePause: 0, exhalePause: 0);
   double _opacity = 1.0;
@@ -34,7 +34,7 @@ class _BreatheScreenState extends State<BreatheScreen>
 
   AnimationController _controller;
   Animation _curve;
-  Animation<double> _scale;
+  Animation<double> _blurFade;
 
   @override
   void initState() {
@@ -47,7 +47,7 @@ class _BreatheScreenState extends State<BreatheScreen>
         setState(() {});
       });
     _curve = CurvedAnimation(parent: _controller, curve: _animationCurve);
-    _scale = Tween<double>(begin: 1.0, end: 3.0).animate(_curve);
+    _blurFade = Tween<double>(begin: 4.0, end: 0.0).animate(_curve);
 
     Vibration.hasVibrator().then((hasVibrator) {
       setState(() {
@@ -73,6 +73,12 @@ class _BreatheScreenState extends State<BreatheScreen>
   }
 
   void toggleBreath() {
+    if (_isBreathing) {
+      _controller.reverse();
+    } else {
+      _controller.forward();
+    }
+
     if (_hasVibrator && _vibrationEnabled && _vibrationPattern != null) {
       if (!_isBreathing) {
         _breathTimer = Timer(
@@ -126,12 +132,10 @@ class _BreatheScreenState extends State<BreatheScreen>
 
   void _toggleMenu() {
     if (_showingMenu) {
-      _controller.reverse();
       setState(() {
         _opacity = 1.0;
       });
     } else {
-      _controller.forward();
       Future.delayed(Duration(milliseconds: 100), () {
         setState(() {
           _opacity = 0.0;
@@ -154,55 +158,53 @@ class _BreatheScreenState extends State<BreatheScreen>
       },
       child: Scaffold(
         body: Stack(children: [
-          Transform.scale(
-            scale: _scale.value,
-            child: AnimatedOpacity(
-              opacity: _opacity,
-              duration: _animationDuration,
-              curve: _animationCurve,
-              child: GestureDetector(
-                onTap: toggleBreath,
-                behavior: HitTestBehavior.translucent,
-                child: Stack(
-                  children: [
-                    Particles(
-                      pattern: _pattern,
-                      isBreathing: _isBreathing,
-                      quantity: 40,
-                      diameter: 4.0,
-                    ),
-                    Particles(
-                      pattern: _pattern,
-                      isBreathing: _isBreathing,
-                      quantity: 40,
-                      diameter: 5.0,
-                    ),
-                    Particles(
-                      pattern: _pattern,
-                      isBreathing: _isBreathing,
-                      quantity: 30,
-                      diameter: 6.0,
-                    ),
-                    AnimatedOpacity(
-                      duration: Duration(milliseconds: 500),
-                      opacity: _isBreathing ? 0.0 : 1.0,
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          child: Center(
-                            child: Text(
-                              'Breathe Out',
-                              style: Theme.of(context).textTheme.headline1,
-                            ),
+          GestureDetector(
+            onTap: toggleBreath,
+            behavior: HitTestBehavior.translucent,
+            child: Stack(
+              children: [
+                Particles(
+                  pattern: _pattern,
+                  isBreathing: _isBreathing,
+                  quantity: 40,
+                  diameter: 4.0,
+                ),
+                Particles(
+                  pattern: _pattern,
+                  isBreathing: _isBreathing,
+                  quantity: 40,
+                  diameter: 5.0,
+                ),
+                Particles(
+                  pattern: _pattern,
+                  isBreathing: _isBreathing,
+                  quantity: 30,
+                  diameter: 6.0,
+                ),
+                BackdropFilter(
+                  filter: ImageFilter.blur(
+                      sigmaX: _blurFade.value, sigmaY: _blurFade.value),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: Center(
+                        child: Stack(
+                      children: [
+                        Text(' '),
+                        AnimatedOpacity(
+                          duration: _animationDuration,
+                          curve: _animationCurve,
+                          opacity: _isBreathing || _showingMenu ? 0.0 : 1.0,
+                          child: Text(
+                            'Breathe Out',
+                            style: Theme.of(context).textTheme.headline1,
                           ),
                         ),
-                      ),
-                    )
-                  ],
+                      ],
+                    )),
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
           Padding(
@@ -210,8 +212,8 @@ class _BreatheScreenState extends State<BreatheScreen>
             child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               AnimatedOpacity(
                 opacity: _isBreathing || _showingMenu ? 0.0 : 1.0,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
+                duration: _animationDuration,
+                curve: _animationCurve,
                 child: IconButton(
                   icon: Icon(
                     BreatheIcons.lungs,
