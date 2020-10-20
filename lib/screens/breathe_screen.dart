@@ -18,7 +18,7 @@ class BreatheScreen extends StatefulWidget {
 
 class _BreatheScreenState extends State<BreatheScreen>
     with TickerProviderStateMixin {
-  static const _animationDuration = Duration(milliseconds: 500);
+  static const _animationDuration = Duration(milliseconds: 400);
   static const _animationCurve = Curves.easeInOut;
   Pattern _pattern =
       Pattern(inhale: 5.5, exhale: 5.5, inhalePause: 0, exhalePause: 0);
@@ -26,7 +26,7 @@ class _BreatheScreenState extends State<BreatheScreen>
   bool _isBreathing = false;
   bool _showingMenu = false;
   bool _hasVibrator = false;
-  bool _vibrationEnabled = true;
+  bool _vibrationEnabled = false;
 
   Timer _breathTimer;
   Timer _breathInterval;
@@ -187,14 +187,18 @@ class _BreatheScreenState extends State<BreatheScreen>
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
-                    child: Center(
-                        child: Stack(
-                      children: [
-                        Text(
+                    child: Stack(children: [
+                      AnimatedOpacity(
+                        duration: _animationDuration,
+                        curve: _animationCurve,
+                        opacity: !_isBreathing ? 1.0 : 0.0,
+                        child: Text(
                           'o',
                           style: TextStyle(color: Colors.black),
                         ),
-                        AnimatedOpacity(
+                      ),
+                      Center(
+                        child: AnimatedOpacity(
                           duration: _animationDuration,
                           curve: _animationCurve,
                           opacity: _isBreathing || _showingMenu ? 0.0 : 1.0,
@@ -203,8 +207,8 @@ class _BreatheScreenState extends State<BreatheScreen>
                             style: Theme.of(context).textTheme.headline1,
                           ),
                         ),
-                      ],
-                    )),
+                      ),
+                    ]),
                   ),
                 ),
               ],

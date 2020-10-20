@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import './incrementer.dart';
+import '../assets/breathe_icons.dart';
 
 import '../models/pattern.dart';
 
@@ -136,7 +137,7 @@ class Menu extends StatelessWidget {
                   child: IconButton(
                     iconSize: 50,
                     icon: Icon(
-                      Icons.vibration,
+                      BreatheIcons.vibrate,
                       color:
                           vibrationEnabled ? Color(0xfffc00a3) : Colors.white,
                       size: 50,
