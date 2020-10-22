@@ -166,20 +166,8 @@ class _BreatheScreenState extends State<BreatheScreen>
                 Particles(
                   pattern: _pattern,
                   isBreathing: _isBreathing,
-                  quantity: 60,
-                  diameter: 4.0,
-                ),
-                Particles(
-                  pattern: _pattern,
-                  isBreathing: _isBreathing,
-                  quantity: 60,
-                  diameter: 5.0,
-                ),
-                Particles(
-                  pattern: _pattern,
-                  isBreathing: _isBreathing,
-                  quantity: 50,
-                  diameter: 6.0,
+                  quantity: [10, 10, 10],
+                  diameter: [4.0, 5.0, 6.0],
                 ),
                 BackdropFilter(
                   filter: ImageFilter.blur(

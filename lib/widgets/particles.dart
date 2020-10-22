@@ -8,8 +8,8 @@ import '../models/pattern.dart';
 class Particles extends StatelessWidget {
   final Pattern pattern;
   final bool isBreathing;
-  final int quantity;
-  final double diameter;
+  final List<int> quantity;
+  final List<double> diameter;
 
   Particles(
       {@required this.pattern,
@@ -23,18 +23,25 @@ class Particles extends StatelessWidget {
         MediaQuery.of(context).size.height * 0.4);
 
     return Stack(
-        children: List.generate(
-      quantity,
-      (index) {
-        return Center(
-            child: ParticleContainer(
-                pattern: pattern,
-                diameter: diameter,
-                duration: (diameter * Random().nextDouble()).toInt() + 2,
-                offset: diameter * Random().nextDouble() + (diameter * 0.5),
-                offsetRadius: _radius,
-                isBreathing: isBreathing));
-      },
-    ));
+      children: List.generate(
+          quantity.length,
+          (index) => Stack(
+                  children: List.generate(
+                quantity[index],
+                (i) {
+                  return Center(
+                      child: ParticleContainer(
+                          pattern: pattern,
+                          diameter: diameter[index],
+                          duration: (diameter[index] * Random().nextDouble())
+                                  .toInt() +
+                              2,
+                          offset: diameter[index] * Random().nextDouble() +
+                              (diameter[index] * 0.5),
+                          offsetRadius: _radius,
+                          isBreathing: isBreathing));
+                },
+              ))).toList(),
+    );
   }
 }
