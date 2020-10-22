@@ -27,12 +27,16 @@ class _ParticleState extends State<Particle>
     super.initState();
 
     _rotateController = AnimationController(
-      duration: Duration(seconds: widget.duration),
+      duration: Duration(
+          seconds: (widget.diameter * Random().nextDouble()).toInt() + 2),
       vsync: this,
     )..repeat();
 
-    _offsetX = Random().nextDouble() < 0.5 ? -widget.offset : widget.offset;
-    _offsetY = Random().nextDouble() < 0.5 ? -widget.offset : widget.offset;
+    final _offset =
+        widget.diameter * Random().nextDouble() + (widget.diameter * 0.5);
+
+    _offsetX = Random().nextDouble() < 0.5 ? -_offset : _offset;
+    _offsetY = Random().nextDouble() < 0.5 ? -_offset : _offset;
   }
 
   @override

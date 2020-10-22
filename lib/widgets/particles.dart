@@ -33,11 +33,6 @@ class Particles extends StatelessWidget {
                       child: ParticleContainer(
                           pattern: pattern,
                           diameter: diameter[index],
-                          duration: (diameter[index] * Random().nextDouble())
-                                  .toInt() +
-                              2,
-                          offset: diameter[index] * Random().nextDouble() +
-                              (diameter[index] * 0.5),
                           offsetRadius: _radius,
                           isBreathing: isBreathing));
                 },

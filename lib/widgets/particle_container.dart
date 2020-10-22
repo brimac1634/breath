@@ -10,16 +10,12 @@ class ParticleContainer extends StatefulWidget {
   final Pattern pattern;
   final bool isBreathing;
   final double diameter;
-  final int duration;
-  final double offset;
   final double offsetRadius;
 
   ParticleContainer(
       {@required this.pattern,
       @required this.isBreathing,
       @required this.diameter,
-      @required this.duration,
-      @required this.offset,
       @required this.offsetRadius});
   @override
   _ParticleContainerState createState() => _ParticleContainerState();
@@ -124,8 +120,6 @@ class _ParticleContainerState extends State<ParticleContainer>
             _xOffset * _translation.value, _yOffset * _translation.value),
         child: Particle(
           diameter: widget.diameter,
-          duration: widget.duration,
-          offset: widget.offset,
         ));
   }
 }
