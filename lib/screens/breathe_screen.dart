@@ -69,7 +69,13 @@ class _BreatheScreenState extends State<BreatheScreen>
     super.dispose();
   }
 
-  void _toggleVibrationAndAnimation() {
+  void _toggleBreath() {
+    if (_isBreathing) {
+      _controller.reverse();
+    } else {
+      _controller.forward();
+    }
+
     if (_hasVibrator && _vibrationEnabled && _vibrationPattern != null) {
       if (!_isBreathing) {
         _breathTimer = Timer(
@@ -97,18 +103,6 @@ class _BreatheScreenState extends State<BreatheScreen>
     setState(() {
       _isBreathing = !_isBreathing;
     });
-  }
-
-  void toggleBreath() {
-    if (_isBreathing) {
-      _controller.reverse();
-      _toggleVibrationAndAnimation();
-    } else {
-      _controller.forward();
-      _startTimer = Timer(_animationDuration, () {
-        _toggleVibrationAndAnimation();
-      });
-    }
   }
 
   List<int> _getVibrationPattern(
@@ -165,7 +159,7 @@ class _BreatheScreenState extends State<BreatheScreen>
           IgnorePointer(
             ignoring: _showingMenu,
             child: GestureDetector(
-              onTap: toggleBreath,
+              onTap: _toggleBreath,
               behavior: HitTestBehavior.translucent,
               child: Stack(
                 children: [
