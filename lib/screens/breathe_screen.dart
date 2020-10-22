@@ -39,15 +39,11 @@ class _BreatheScreenState extends State<BreatheScreen>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-        duration: _animationDuration,
-        reverseDuration: Duration(milliseconds: 1200),
-        vsync: this)
+    _controller = AnimationController(duration: _animationDuration, vsync: this)
       ..addListener(() {
         setState(() {});
       });
-    _curve = CurvedAnimation(parent: _controller, curve: _animationCurve);
-    _blurFade = Tween<double>(begin: 4.0, end: 0.0).animate(_curve);
+    _blurFade = Tween<double>(begin: 4.0, end: 0.0).animate(_controller);
 
     Vibration.hasVibrator().then((hasVibrator) {
       setState(() {
@@ -158,48 +154,51 @@ class _BreatheScreenState extends State<BreatheScreen>
       },
       child: Scaffold(
         body: Stack(children: [
-          GestureDetector(
-            onTap: toggleBreath,
-            behavior: HitTestBehavior.translucent,
-            child: Stack(
-              children: [
-                Particles(
-                  pattern: _pattern,
-                  isBreathing: _isBreathing,
-                  quantity: [10, 10, 10],
-                  diameter: [4.0, 5.0, 6.0],
-                ),
-                BackdropFilter(
-                  filter: ImageFilter.blur(
-                      sigmaX: _blurFade.value, sigmaY: _blurFade.value),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    child: Stack(children: [
-                      AnimatedOpacity(
-                        duration: _animationDuration,
-                        curve: _animationCurve,
-                        opacity: !_isBreathing ? 1.0 : 0.0,
-                        child: Text(
-                          'o',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
-                      Center(
-                        child: AnimatedOpacity(
+          IgnorePointer(
+            ignoring: _showingMenu,
+            child: GestureDetector(
+              onTap: toggleBreath,
+              behavior: HitTestBehavior.translucent,
+              child: Stack(
+                children: [
+                  Particles(
+                    pattern: _pattern,
+                    isBreathing: _isBreathing,
+                    quantity: [30, 30, 20],
+                    diameter: [4.0, 5.0, 6.0],
+                  ),
+                  BackdropFilter(
+                    filter: ImageFilter.blur(
+                        sigmaX: _blurFade.value, sigmaY: _blurFade.value),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      child: Stack(children: [
+                        AnimatedOpacity(
                           duration: _animationDuration,
                           curve: _animationCurve,
-                          opacity: _isBreathing || _showingMenu ? 0.0 : 1.0,
+                          opacity: !_isBreathing ? 1.0 : 0.0,
                           child: Text(
-                            'Breathe Out',
-                            style: Theme.of(context).textTheme.headline1,
+                            '.',
+                            style: TextStyle(color: Colors.black),
                           ),
                         ),
-                      ),
-                    ]),
+                        Center(
+                          child: AnimatedOpacity(
+                            duration: _animationDuration,
+                            curve: _animationCurve,
+                            opacity: _isBreathing || _showingMenu ? 0.0 : 1.0,
+                            child: Text(
+                              'On Tap: Breathe Out',
+                              style: Theme.of(context).textTheme.headline1,
+                            ),
+                          ),
+                        ),
+                      ]),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           Padding(
