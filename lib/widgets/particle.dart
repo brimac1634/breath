@@ -3,13 +3,9 @@ import 'dart:math';
 
 class Particle extends StatefulWidget {
   final double diameter;
-  final int duration;
-  final double offset;
 
   Particle({
     @required this.diameter,
-    @required this.duration,
-    @required this.offset,
   });
   @override
   _ParticleState createState() => _ParticleState();
