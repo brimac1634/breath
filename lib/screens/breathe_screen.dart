@@ -28,12 +28,12 @@ class _BreatheScreenState extends State<BreatheScreen>
   bool _hasVibrator = false;
   bool _vibrationEnabled = false;
 
+  Timer _startTimer;
   Timer _breathTimer;
   Timer _breathInterval;
   List<int> _vibrationPattern;
 
   AnimationController _controller;
-  Animation _curve;
   Animation<double> _blurFade;
 
   @override
@@ -65,16 +65,11 @@ class _BreatheScreenState extends State<BreatheScreen>
     _controller.dispose();
     _breathTimer.cancel();
     _breathInterval.cancel();
+    _startTimer.cancel();
     super.dispose();
   }
 
-  void toggleBreath() {
-    if (_isBreathing) {
-      _controller.reverse();
-    } else {
-      _controller.forward();
-    }
-
+  void _toggleVibrationAndAnimation() {
     if (_hasVibrator && _vibrationEnabled && _vibrationPattern != null) {
       if (!_isBreathing) {
         _breathTimer = Timer(
@@ -102,6 +97,18 @@ class _BreatheScreenState extends State<BreatheScreen>
     setState(() {
       _isBreathing = !_isBreathing;
     });
+  }
+
+  void toggleBreath() {
+    if (_isBreathing) {
+      _controller.reverse();
+      _toggleVibrationAndAnimation();
+    } else {
+      _controller.forward();
+      _startTimer = Timer(_animationDuration, () {
+        _toggleVibrationAndAnimation();
+      });
+    }
   }
 
   List<int> _getVibrationPattern(
