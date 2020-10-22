@@ -94,6 +94,7 @@ class _BreatheScreenState extends State<BreatheScreen>
           });
         });
       } else {
+        Vibration.cancel();
         _breathTimer.cancel();
         _breathInterval.cancel();
       }
