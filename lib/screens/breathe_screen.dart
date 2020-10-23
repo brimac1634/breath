@@ -16,34 +16,28 @@ class BreatheScreen extends StatefulWidget {
   _BreatheScreenState createState() => _BreatheScreenState();
 }
 
-class _BreatheScreenState extends State<BreatheScreen>
-    with TickerProviderStateMixin {
+class _BreatheScreenState extends State<BreatheScreen> {
   static const _animationDuration = Duration(milliseconds: 400);
   static const _animationCurve = Curves.easeInOut;
   Pattern _pattern =
       Pattern(inhale: 5.5, exhale: 5.5, inhalePause: 0, exhalePause: 0);
   double _opacity = 1.0;
+  bool _showStart = true;
+  bool _showBreatheIn = false;
   bool _isBreathing = false;
   bool _showingMenu = false;
   bool _hasVibrator = false;
   bool _vibrationEnabled = false;
 
+  Timer _animationTimer;
   Timer _startTimer;
   Timer _breathTimer;
   Timer _breathInterval;
   List<int> _vibrationPattern;
 
-  AnimationController _controller;
-  Animation<double> _blurFade;
-
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: _animationDuration, vsync: this)
-      ..addListener(() {
-        setState(() {});
-      });
-    _blurFade = Tween<double>(begin: 4.0, end: 0.0).animate(_controller);
 
     Vibration.hasVibrator().then((hasVibrator) {
       setState(() {
@@ -62,20 +56,14 @@ class _BreatheScreenState extends State<BreatheScreen>
 
   @override
   void dispose() {
-    _controller.dispose();
     _breathTimer.cancel();
-    _breathInterval.cancel();
     _startTimer.cancel();
+    _breathInterval.cancel();
+    _animationTimer.cancel();
     super.dispose();
   }
 
-  void _toggleBreath() {
-    if (_isBreathing) {
-      _controller.reverse();
-    } else {
-      _controller.forward();
-    }
-
+  void _toggleAnimationAndVibration() {
     if (_hasVibrator && _vibrationEnabled && _vibrationPattern != null) {
       if (!_isBreathing) {
         _breathTimer = Timer(
@@ -103,6 +91,20 @@ class _BreatheScreenState extends State<BreatheScreen>
     setState(() {
       _isBreathing = !_isBreathing;
     });
+  }
+
+  void _toggleBreath() {
+    setState(() {
+      _showStart = !_showStart;
+    });
+
+    if (_isBreathing) {
+      _toggleAnimationAndVibration();
+    } else {
+      _animationTimer = Timer(Duration(seconds: 3), () {
+        _toggleAnimationAndVibration();
+      });
+    }
   }
 
   List<int> _getVibrationPattern(
@@ -166,39 +168,33 @@ class _BreatheScreenState extends State<BreatheScreen>
                   Particles(
                     pattern: _pattern,
                     isBreathing: _isBreathing,
-                    quantity: [30, 30, 20],
+                    quantity: [35, 35, 30],
                     diameter: [4.0, 5.0, 6.0],
                   ),
                   BackdropFilter(
-                    filter: ImageFilter.blur(
-                        sigmaX: _blurFade.value, sigmaY: _blurFade.value),
+                    filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
                       child: Stack(children: [
-                        AnimatedOpacity(
-                          duration: _animationDuration,
-                          curve: _animationCurve,
-                          opacity: !_isBreathing ? 1.0 : 0.0,
-                          child: Text(
-                            '.',
-                            style: TextStyle(color: Colors.black),
-                          ),
+                        Text(
+                          '.',
+                          style: TextStyle(color: Colors.black),
                         ),
                         Center(
                           child: AnimatedOpacity(
                             duration: _animationDuration,
                             curve: _animationCurve,
-                            opacity: _isBreathing || _showingMenu ? 0.0 : 1.0,
+                            opacity: !_showStart || _showingMenu ? 0.0 : 1.0,
                             child: Text(
-                              'On Tap: Breathe Out',
+                              'Tap to start',
                               style: Theme.of(context).textTheme.headline1,
                             ),
                           ),
                         ),
                       ]),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
