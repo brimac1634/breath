@@ -22,8 +22,9 @@ class _BreatheScreenState extends State<BreatheScreen> {
   Pattern _pattern =
       Pattern(inhale: 5.5, exhale: 5.5, inhalePause: 0, exhalePause: 0);
   double _opacity = 1.0;
+  String _breathMessage = '';
   bool _showStart = true;
-  bool _showBreatheIn = false;
+  bool _showBreatheMessage = false;
   bool _isBreathing = false;
   bool _showingMenu = false;
   bool _hasVibrator = false;
@@ -31,6 +32,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
 
   Timer _animationTimer;
   Timer _startTimer;
+  Timer _breatheInTimer;
   Timer _breathTimer;
   Timer _breathInterval;
   List<int> _vibrationPattern;
@@ -58,6 +60,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
   void dispose() {
     _breathTimer.cancel();
     _startTimer.cancel();
+    _breatheInTimer.cancel();
     _breathInterval.cancel();
     _animationTimer.cancel();
     super.dispose();
@@ -101,8 +104,38 @@ class _BreatheScreenState extends State<BreatheScreen> {
     if (_isBreathing) {
       _toggleAnimationAndVibration();
     } else {
-      _animationTimer = Timer(Duration(seconds: 3), () {
-        _toggleAnimationAndVibration();
+      // step 1
+      _breatheInTimer = Timer(Duration(seconds: 2), () {
+        setState(() {
+          _breathMessage = 'Breathe In';
+          _showBreatheMessage = true;
+        });
+
+        // step 2
+        _breatheInTimer = Timer(Duration(seconds: 3), () {
+          setState(() {
+            _showBreatheMessage = false;
+          });
+
+          // step 3
+          _breatheInTimer = Timer(Duration(seconds: 1), () {
+            setState(() {
+              _breathMessage = 'Breathe Out';
+              _showBreatheMessage = true;
+            });
+
+            _animationTimer = Timer(Duration(seconds: 1), () {
+              _toggleAnimationAndVibration();
+            });
+
+            _breatheInTimer =
+                Timer(Duration(seconds: (_pattern.exhale * 0.8).toInt()), () {
+              setState(() {
+                _showBreatheMessage = false;
+              });
+            });
+          });
+        });
       });
     }
   }
@@ -199,6 +232,22 @@ class _BreatheScreenState extends State<BreatheScreen> {
               ),
             ),
           ),
+          Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: MediaQuery.of(context).size.height * 0.3,
+              child: Center(
+                child: AnimatedOpacity(
+                  opacity: _showBreatheMessage ? 1 : 0,
+                  duration: Duration(milliseconds: 600),
+                  curve: _animationCurve,
+                  child: Text(
+                    _breathMessage,
+                    style: Theme.of(context).textTheme.headline1,
+                  ),
+                ),
+              )),
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
@@ -223,22 +272,25 @@ class _BreatheScreenState extends State<BreatheScreen> {
             curve: _animationCurve,
             child: IgnorePointer(
               ignoring: !_showingMenu,
-              child: Menu(
-                  pattern: _pattern,
-                  vibrationEnabled: _vibrationEnabled,
-                  onVibrationChange: (vibration) {
-                    setState(() {
-                      _vibrationEnabled = vibration;
-                    });
-                  },
-                  onPatternChange: (pattern) {
-                    setState(() {
-                      _pattern = pattern;
-                    });
-                  },
-                  onSave: () {
-                    _toggleMenu();
-                  }),
+              child: Container(
+                color: Colors.black,
+                child: Menu(
+                    pattern: _pattern,
+                    vibrationEnabled: _vibrationEnabled,
+                    onVibrationChange: (vibration) {
+                      setState(() {
+                        _vibrationEnabled = vibration;
+                      });
+                    },
+                    onPatternChange: (pattern) {
+                      setState(() {
+                        _pattern = pattern;
+                      });
+                    },
+                    onSave: () {
+                      _toggleMenu();
+                    }),
+              ),
             ),
           )
         ]),
