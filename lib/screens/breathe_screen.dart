@@ -133,6 +133,23 @@ class _BreatheScreenState extends State<BreatheScreen> {
               setState(() {
                 _showBreatheMessage = false;
               });
+
+              _breatheInTimer = Timer(
+                  Duration(
+                      seconds: ((_pattern.exhale * 0.2) + _pattern.exhalePause)
+                          .toInt()), () {
+                setState(() {
+                  _breathMessage = 'Breathe In';
+                  _showBreatheMessage = true;
+                });
+
+                _breatheInTimer = Timer(
+                    Duration(seconds: (_pattern.inhale * 0.8).toInt()), () {
+                  setState(() {
+                    _showBreatheMessage = false;
+                  });
+                });
+              });
             });
           });
         });
@@ -236,7 +253,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
               bottom: 0,
               left: 0,
               right: 0,
-              height: MediaQuery.of(context).size.height * 0.3,
+              height: MediaQuery.of(context).size.height * 0.35,
               child: Center(
                 child: AnimatedOpacity(
                   opacity: _showBreatheMessage ? 1 : 0,
