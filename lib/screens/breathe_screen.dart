@@ -97,12 +97,14 @@ class _BreatheScreenState extends State<BreatheScreen> {
   }
 
   void _toggleBreath() {
-    setState(() {
-      _showStart = !_showStart;
-    });
-
-    if (_isBreathing) {
-      _toggleAnimationAndVibration();
+    if (!_showStart) {
+      if (_isBreathing) {
+        _toggleAnimationAndVibration();
+      }
+      _breatheInTimer.cancel();
+      setState(() {
+        _showBreatheMessage = false;
+      });
     } else {
       // step 1
       _breatheInTimer = Timer(Duration(seconds: 2), () {
@@ -124,29 +126,31 @@ class _BreatheScreenState extends State<BreatheScreen> {
               _showBreatheMessage = true;
             });
 
-            _animationTimer = Timer(Duration(seconds: 1), () {
+            _animationTimer = Timer(Duration(milliseconds: 500), () {
               _toggleAnimationAndVibration();
-            });
 
-            _breatheInTimer =
-                Timer(Duration(seconds: (_pattern.exhale * 0.8).toInt()), () {
-              setState(() {
-                _showBreatheMessage = false;
-              });
-
-              _breatheInTimer = Timer(
-                  Duration(
-                      seconds: ((_pattern.exhale * 0.2) + _pattern.exhalePause)
-                          .toInt()), () {
+              _breatheInTimer =
+                  Timer(Duration(seconds: (_pattern.exhale * 0.8).toInt()), () {
                 setState(() {
-                  _breathMessage = 'Breathe In';
-                  _showBreatheMessage = true;
+                  _showBreatheMessage = false;
                 });
 
                 _breatheInTimer = Timer(
-                    Duration(seconds: (_pattern.inhale * 0.8).toInt()), () {
+                    Duration(
+                        seconds: ((_pattern.exhale * 0.2) +
+                                _pattern.exhalePause +
+                                (_pattern.inhale * 0.1))
+                            .toInt()), () {
                   setState(() {
-                    _showBreatheMessage = false;
+                    _breathMessage = 'Breathe In';
+                    _showBreatheMessage = true;
+                  });
+
+                  _breatheInTimer = Timer(
+                      Duration(seconds: (_pattern.inhale * 0.8).toInt()), () {
+                    setState(() {
+                      _showBreatheMessage = false;
+                    });
                   });
                 });
               });
@@ -155,6 +159,10 @@ class _BreatheScreenState extends State<BreatheScreen> {
         });
       });
     }
+
+    setState(() {
+      _showStart = !_showStart;
+    });
   }
 
   List<int> _getVibrationPattern(
@@ -269,7 +277,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
             padding: const EdgeInsets.all(20.0),
             child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               AnimatedOpacity(
-                opacity: _isBreathing || _showingMenu ? 0.0 : 1.0,
+                opacity: !_showStart || _showingMenu ? 0.0 : 1.0,
                 duration: _animationDuration,
                 curve: _animationCurve,
                 child: IconButton(
@@ -293,6 +301,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
                 color: Colors.black,
                 child: Menu(
                     pattern: _pattern,
+                    hasVibrator: _hasVibrator,
                     vibrationEnabled: _vibrationEnabled,
                     onVibrationChange: (vibration) {
                       setState(() {

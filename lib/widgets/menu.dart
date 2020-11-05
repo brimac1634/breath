@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vibration/vibration.dart';
 
 import './incrementer.dart';
 import '../assets/breathe_icons.dart';
@@ -7,6 +8,7 @@ import '../models/pattern.dart';
 
 class Menu extends StatelessWidget {
   final Pattern pattern;
+  final bool hasVibrator;
   final bool vibrationEnabled;
   final Function onVibrationChange;
   final Function onPatternChange;
@@ -14,6 +16,7 @@ class Menu extends StatelessWidget {
 
   Menu(
       {@required this.pattern,
+      @required this.hasVibrator,
       @required this.vibrationEnabled,
       @required this.onVibrationChange,
       @required this.onPatternChange,
@@ -121,39 +124,45 @@ class Menu extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    'Vibration',
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: IconButton(
-                    iconSize: 50,
-                    icon: Icon(
-                      BreatheIcons.vibrate,
-                      color:
-                          vibrationEnabled ? Color(0xfffc00a3) : Colors.white,
-                      size: 50,
+            child: Opacity(
+              opacity: hasVibrator ? 1.0 : 0.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      'Vibration',
+                      style: Theme.of(context).textTheme.bodyText1,
                     ),
-                    onPressed: () {
-                      onVibrationChange(!vibrationEnabled);
-                    },
                   ),
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: IconButton(
+                      iconSize: 50,
+                      icon: Icon(
+                        BreatheIcons.vibrate,
+                        color:
+                            vibrationEnabled ? Color(0xfffc00a3) : Colors.white,
+                        size: 50,
+                      ),
+                      onPressed: () {
+                        if (!hasVibrator) return;
+                        if (!vibrationEnabled) Vibration.vibrate(duration: 250);
+                        onVibrationChange(!vibrationEnabled);
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
           SizedBox(
             height: 40,
           ),
           OutlineButton(
+            highlightedBorderColor: const Color(0xfff0dfea),
             padding:
                 const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
             borderSide: BorderSide(
