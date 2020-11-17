@@ -33,6 +33,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
   Timer _animationTimer;
   Timer _startTimer;
   Timer _breatheInTimer;
+  Timer _lastBreatheInTimer;
   Timer _breathTimer;
   Timer _breathInterval;
   List<int> _vibrationPattern;
@@ -61,6 +62,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
     _breathTimer.cancel();
     _startTimer.cancel();
     _breatheInTimer.cancel();
+    _lastBreatheInTimer.cancel();
     _breathInterval.cancel();
     _animationTimer.cancel();
     super.dispose();
@@ -126,15 +128,18 @@ class _BreatheScreenState extends State<BreatheScreen> {
               _showBreatheMessage = true;
             });
 
+            // animation starts
             _animationTimer = Timer(Duration(milliseconds: 500), () {
               _toggleAnimationAndVibration();
 
+              // step 4
               _breatheInTimer =
                   Timer(Duration(seconds: (_pattern.exhale * 0.8).toInt()), () {
                 setState(() {
                   _showBreatheMessage = false;
                 });
 
+                // step 5
                 _breatheInTimer = Timer(
                     Duration(
                         seconds: ((_pattern.exhale * 0.2) +
@@ -145,13 +150,17 @@ class _BreatheScreenState extends State<BreatheScreen> {
                     _breathMessage = 'Breathe In';
                     _showBreatheMessage = true;
                   });
+                });
+              });
 
-                  _breatheInTimer = Timer(
-                      Duration(seconds: (_pattern.inhale * 0.8).toInt()), () {
-                    setState(() {
-                      _showBreatheMessage = false;
-                    });
-                  });
+              _lastBreatheInTimer = Timer(
+                  Duration(
+                      seconds: (_pattern.exhale +
+                              _pattern.exhalePause +
+                              (_pattern.inhale * 0.8))
+                          .toInt()), () {
+                setState(() {
+                  _showBreatheMessage = false;
                 });
               });
             });
@@ -226,7 +235,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
                   Particles(
                     pattern: _pattern,
                     isBreathing: _isBreathing,
-                    quantity: [35, 35, 30],
+                    quantity: [40, 40, 35],
                     diameter: [4.0, 5.0, 6.0],
                   ),
                   BackdropFilter(
