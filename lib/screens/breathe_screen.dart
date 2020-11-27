@@ -39,20 +39,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
   @override
   void initState() {
     super.initState();
-
-    Vibration.hasVibrator().then((hasVibrator) {
-      setState(() {
-        _hasVibrator = hasVibrator;
-        if (hasVibrator) {
-          _vibrationPattern = _getVibrationPattern(
-              incrementMultiple: 1.5,
-              milliseconds: _pattern.inhale * 1000,
-              vibrationDuration: 100);
-        }
-      });
-    }).catchError((error) {
-      print(error);
-    });
+    _calculateVibration(_pattern);
   }
 
   @override
@@ -62,6 +49,22 @@ class _BreatheScreenState extends State<BreatheScreen> {
     _breathInterval.cancel();
     _animationTimer.cancel();
     super.dispose();
+  }
+
+  void _calculateVibration(Pattern pattern) {
+    Vibration.hasVibrator().then((hasVibrator) {
+      setState(() {
+        _hasVibrator = hasVibrator;
+        if (hasVibrator) {
+          _vibrationPattern = _getVibrationPattern(
+              incrementMultiple: 1.5,
+              milliseconds: pattern.inhale * 1000,
+              vibrationDuration: 100);
+        }
+      });
+    }).catchError((error) {
+      print(error);
+    });
   }
 
   void _toggleAnimationAndVibration() {
@@ -115,7 +118,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
       double milliseconds,
       double vibrationDuration}) {
     var halfOfDuration = milliseconds / 2;
-    var halfVibrationCount = (halfOfDuration * 0.0028).floor();
+    var halfVibrationCount = (halfOfDuration * 0.0024).floor();
     var halfDurationLessVibrations =
         halfOfDuration - (halfVibrationCount * vibrationDuration);
     var r = (1 - incrementMultiple) /
@@ -245,6 +248,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
                       setState(() {
                         _pattern = pattern;
                       });
+                      _calculateVibration(pattern);
                     },
                     onSave: () {
                       _toggleMenu();

@@ -149,7 +149,7 @@ class Menu extends StatelessWidget {
                       ),
                       onPressed: () {
                         if (!hasVibrator) return;
-                        if (!vibrationEnabled) Vibration.vibrate(duration: 250);
+                        if (!vibrationEnabled) Vibration.vibrate(duration: 150);
                         onVibrationChange(!vibrationEnabled);
                       },
                     ),
