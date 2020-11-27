@@ -18,7 +18,7 @@ class Incrementer extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              if (value <= 0) return;
+              if (value <= 1) return;
               onChange(value - 0.5);
             },
             child: Container(
@@ -41,6 +41,7 @@ class Incrementer extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
+              if (value >= 60) return;
               onChange(value + 0.5);
             },
             child: Container(
