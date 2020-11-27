@@ -102,6 +102,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
       if (_isBreathing) {
         _toggleAnimationAndVibration();
       }
+      _animationTimer.cancel();
     } else {
       _animationTimer = Timer(Duration(milliseconds: 6500), () {
         _toggleAnimationAndVibration();
