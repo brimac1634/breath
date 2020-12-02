@@ -23,103 +23,106 @@ class Menu extends StatelessWidget {
       this.onSave});
 
   Widget renderOptions(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Inhale Time',
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-              Incrementer(
-                value: pattern.inhale,
-                onChange: (value) {
-                  onPatternChange(Pattern(
-                      inhale: value,
-                      exhale: pattern.exhale,
-                      inhalePause: pattern.inhalePause,
-                      exhalePause: pattern.exhalePause));
-                },
-              )
-            ],
+    return Container(
+      constraints: BoxConstraints(maxWidth: 400),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Inhale Time',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                Incrementer(
+                  value: pattern.inhale,
+                  onChange: (value) {
+                    onPatternChange(Pattern(
+                        inhale: value,
+                        exhale: pattern.exhale,
+                        inhalePause: pattern.inhalePause,
+                        exhalePause: pattern.exhalePause));
+                  },
+                )
+              ],
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Exhale Time',
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-              Incrementer(
-                value: pattern.exhale,
-                onChange: (value) {
-                  onPatternChange(Pattern(
-                      inhale: pattern.inhale,
-                      exhale: value,
-                      inhalePause: pattern.inhalePause,
-                      exhalePause: pattern.exhalePause));
-                },
-              )
-            ],
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Exhale Time',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                Incrementer(
+                  value: pattern.exhale,
+                  onChange: (value) {
+                    onPatternChange(Pattern(
+                        inhale: pattern.inhale,
+                        exhale: value,
+                        inhalePause: pattern.inhalePause,
+                        exhalePause: pattern.exhalePause));
+                  },
+                )
+              ],
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Inhale Pause',
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-              Incrementer(
-                value: pattern.inhalePause,
-                onChange: (value) {
-                  onPatternChange(Pattern(
-                      inhale: pattern.inhale,
-                      exhale: pattern.exhale,
-                      inhalePause: value,
-                      exhalePause: pattern.exhalePause));
-                },
-              )
-            ],
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Inhale Pause',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                Incrementer(
+                  value: pattern.inhalePause,
+                  onChange: (value) {
+                    onPatternChange(Pattern(
+                        inhale: pattern.inhale,
+                        exhale: pattern.exhale,
+                        inhalePause: value,
+                        exhalePause: pattern.exhalePause));
+                  },
+                )
+              ],
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Exhale Pause',
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-              Incrementer(
-                value: pattern.exhalePause,
-                onChange: (value) {
-                  onPatternChange(Pattern(
-                      inhale: pattern.inhale,
-                      exhale: pattern.exhale,
-                      inhalePause: pattern.inhalePause,
-                      exhalePause: value));
-                },
-              )
-            ],
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Exhale Pause',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                Incrementer(
+                  value: pattern.exhalePause,
+                  onChange: (value) {
+                    onPatternChange(Pattern(
+                        inhale: pattern.inhale,
+                        exhale: pattern.exhale,
+                        inhalePause: pattern.inhalePause,
+                        exhalePause: value));
+                  },
+                )
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
