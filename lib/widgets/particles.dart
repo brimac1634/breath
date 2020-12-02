@@ -21,7 +21,6 @@ class Particles extends StatelessWidget {
   Widget build(BuildContext context) {
     final _radius = min(MediaQuery.of(context).size.width * 0.4,
         MediaQuery.of(context).size.height * 0.4);
-
     return Stack(
       children: List.generate(
           quantity.length,
@@ -33,7 +32,7 @@ class Particles extends StatelessWidget {
                       child: ParticleContainer(
                           pattern: pattern,
                           diameter: diameter[index],
-                          offsetRadius: _radius,
+                          offsetRadius: min(_radius, 300),
                           isBreathing: isBreathing));
                 },
               ))).toList(),
