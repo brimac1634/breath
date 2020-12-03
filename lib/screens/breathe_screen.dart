@@ -179,7 +179,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
                     diameter: const [4.0, 5.0, 6.0],
                   ),
                   BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
+                    filter: ImageFilter.blur(sigmaX: 0.8, sigmaY: 0.8),
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
@@ -211,7 +211,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
               animationCurve: _animationCurve,
               pattern: _pattern),
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
             child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               AnimatedOpacity(
                 opacity: !_showStart || _showingMenu ? 0.0 : 1.0,
