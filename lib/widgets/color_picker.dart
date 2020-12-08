@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../helpers/slider_indicator_painter.dart';
-
 class ColorPicker extends StatefulWidget {
   final double width;
   final Color currentColor;
   final Function(Color) setColor;
+  final double colorSliderPosition;
+  final Function(double) setColorSliderPosition;
 
   ColorPicker(
       {@required this.width,
       @required this.currentColor,
-      @required this.setColor});
+      @required this.setColor,
+      @required this.colorSliderPosition,
+      @required this.setColorSliderPosition});
   @override
   _ColorPickerState createState() => _ColorPickerState();
 }
@@ -31,13 +33,6 @@ class _ColorPickerState extends State<ColorPicker> {
     Color.fromARGB(255, 255, 0, 127),
     Color.fromARGB(255, 128, 128, 128),
   ];
-  double _colorSliderPosition = 0;
-
-  // @override
-  // initState() {
-  //   super.initState();
-  //   widget.currentColor = _calculateSelectedColor(_colorSliderPosition);
-  // }
 
   _colorChangeHandler(double position) {
     if (position > widget.width) {
@@ -47,11 +42,8 @@ class _ColorPickerState extends State<ColorPicker> {
       position = 0;
     }
 
-    setState(() {
-      _colorSliderPosition = position;
-    });
-
-    widget.setColor(_calculateSelectedColor(_colorSliderPosition));
+    widget.setColorSliderPosition(position);
+    widget.setColor(_calculateSelectedColor(position));
   }
 
   Color _calculateSelectedColor(double position) {
@@ -110,13 +102,9 @@ class _ColorPickerState extends State<ColorPicker> {
                       borderRadius: BorderRadius.circular(6),
                       gradient: LinearGradient(colors: _colors),
                       border: Border.all(color: Colors.white, width: 1)),
-                  // child: CustomPaint(
-                  //   painter: SliderIndicatorPainter(
-                  //       _colorSliderPosition, widget.currentColor),
-                  // ),
                 ),
                 Transform.translate(
-                  offset: Offset(_colorSliderPosition - 25, 0),
+                  offset: Offset(widget.colorSliderPosition - 25, 0),
                   child: Container(
                     height: 50,
                     width: 50,
@@ -130,14 +118,6 @@ class _ColorPickerState extends State<ColorPicker> {
             ),
           ),
         ),
-        // Container(
-        //   height: 50,
-        //   width: 50,
-        //   decoration: BoxDecoration(
-        //     color: widget.currentColor,
-        //     shape: BoxShape.circle,
-        //   ),
-        // )
       ],
     );
   }

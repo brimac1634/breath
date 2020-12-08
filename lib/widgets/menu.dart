@@ -10,7 +10,7 @@ import '../assets/breathe_icons.dart';
 
 import '../models/pattern.dart';
 
-class Menu extends StatelessWidget {
+class Menu extends StatefulWidget {
   final Pattern pattern;
   final Color color;
   final bool hasVibrator;
@@ -30,6 +30,23 @@ class Menu extends StatelessWidget {
       @required this.onPatternChange,
       this.onSave});
 
+  @override
+  _MenuState createState() => _MenuState();
+}
+
+class _MenuState extends State<Menu> {
+  double _colorPickerWidth = 0;
+  double _colorSliderPosition = 0;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setState(() {
+      _colorPickerWidth = min(350, MediaQuery.of(context).size.width * 0.8);
+      _colorSliderPosition = _colorPickerWidth * 0.9;
+    });
+  }
+
   Widget renderOptions(BuildContext context) {
     return Container(
       constraints: BoxConstraints(maxWidth: 400),
@@ -48,13 +65,13 @@ class Menu extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
                 Incrementer(
-                  value: pattern.inhale,
+                  value: widget.pattern.inhale,
                   onChange: (value) {
-                    onPatternChange(Pattern(
+                    widget.onPatternChange(Pattern(
                         inhale: value,
-                        exhale: pattern.exhale,
-                        inhalePause: pattern.inhalePause,
-                        exhalePause: pattern.exhalePause));
+                        exhale: widget.pattern.exhale,
+                        inhalePause: widget.pattern.inhalePause,
+                        exhalePause: widget.pattern.exhalePause));
                   },
                 )
               ],
@@ -71,13 +88,13 @@ class Menu extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
                 Incrementer(
-                  value: pattern.exhale,
+                  value: widget.pattern.exhale,
                   onChange: (value) {
-                    onPatternChange(Pattern(
-                        inhale: pattern.inhale,
+                    widget.onPatternChange(Pattern(
+                        inhale: widget.pattern.inhale,
                         exhale: value,
-                        inhalePause: pattern.inhalePause,
-                        exhalePause: pattern.exhalePause));
+                        inhalePause: widget.pattern.inhalePause,
+                        exhalePause: widget.pattern.exhalePause));
                   },
                 )
               ],
@@ -94,13 +111,13 @@ class Menu extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
                 Incrementer(
-                  value: pattern.inhalePause,
+                  value: widget.pattern.inhalePause,
                   onChange: (value) {
-                    onPatternChange(Pattern(
-                        inhale: pattern.inhale,
-                        exhale: pattern.exhale,
+                    widget.onPatternChange(Pattern(
+                        inhale: widget.pattern.inhale,
+                        exhale: widget.pattern.exhale,
                         inhalePause: value,
-                        exhalePause: pattern.exhalePause));
+                        exhalePause: widget.pattern.exhalePause));
                   },
                 )
               ],
@@ -117,12 +134,12 @@ class Menu extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
                 Incrementer(
-                  value: pattern.exhalePause,
+                  value: widget.pattern.exhalePause,
                   onChange: (value) {
-                    onPatternChange(Pattern(
-                        inhale: pattern.inhale,
-                        exhale: pattern.exhale,
-                        inhalePause: pattern.inhalePause,
+                    widget.onPatternChange(Pattern(
+                        inhale: widget.pattern.inhale,
+                        exhale: widget.pattern.exhale,
+                        inhalePause: widget.pattern.inhalePause,
                         exhalePause: value));
                   },
                 )
@@ -136,7 +153,7 @@ class Menu extends StatelessWidget {
 
   Widget renderResetButton(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      if (hasVibrator)
+      if (widget.hasVibrator)
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: Opacity(
@@ -158,13 +175,15 @@ class Menu extends StatelessWidget {
                     iconSize: 50,
                     icon: Icon(
                       BreatheIcons.vibrate,
-                      color: vibrationEnabled ? color : Colors.white,
+                      color:
+                          widget.vibrationEnabled ? widget.color : Colors.white,
                       size: 50,
                     ),
                     onPressed: () {
-                      if (!hasVibrator) return;
-                      if (!vibrationEnabled) Vibration.vibrate(duration: 150);
-                      onVibrationChange(!vibrationEnabled);
+                      if (!widget.hasVibrator) return;
+                      if (!widget.vibrationEnabled)
+                        Vibration.vibrate(duration: 150);
+                      widget.onVibrationChange(!widget.vibrationEnabled);
                     },
                   ),
                 )
@@ -175,9 +194,15 @@ class Menu extends StatelessWidget {
       Padding(
         padding: const EdgeInsets.only(top: 12),
         child: ColorPicker(
-          width: min(350, MediaQuery.of(context).size.width * 0.8),
-          currentColor: color,
-          setColor: setColor,
+          width: _colorPickerWidth,
+          currentColor: widget.color,
+          setColor: widget.setColor,
+          colorSliderPosition: _colorSliderPosition,
+          setColorSliderPosition: (double position) {
+            setState(() {
+              _colorSliderPosition = position;
+            });
+          },
         ),
       ),
       SizedBox(
@@ -191,10 +216,13 @@ class Menu extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.0)),
         child: Text('Reset', style: Theme.of(context).textTheme.bodyText1),
         onPressed: () {
-          setColor(Color(0xfffc00a3));
-          onPatternChange(Pattern(
+          widget.setColor(Color(0xfffc00a3));
+          widget.onPatternChange(Pattern(
               inhale: 5.5, exhale: 5.5, inhalePause: 0, exhalePause: 0));
-          onVibrationChange(false);
+          widget.onVibrationChange(false);
+          setState(() {
+            _colorSliderPosition = _colorPickerWidth * 0.9;
+          });
         },
       ),
     ]);
@@ -204,7 +232,6 @@ class Menu extends StatelessWidget {
   Widget build(BuildContext context) {
     return OrientationBuilder(
       builder: (context, orientation) => Container(
-        // constraints: BoxConstraints(maxWidth: 400.0),
         padding: EdgeInsets.all(20),
         child: Stack(children: [
           orientation == Orientation.portrait
@@ -238,7 +265,7 @@ class Menu extends StatelessWidget {
                     size: 40.0,
                   ),
                   onPressed: () {
-                    onSave();
+                    widget.onSave();
                   },
                 ),
               ))
