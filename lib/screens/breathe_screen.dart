@@ -23,6 +23,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
   static const _animationCurve = Curves.easeInOut;
   Pattern _pattern =
       Pattern(inhale: 5.5, exhale: 5.5, inhalePause: 0, exhalePause: 0);
+  Color _color = Color(0xfffc00a3);
   double _opacity = 1.0;
   bool _showStart = true;
   bool _isBreathing = false;
@@ -174,6 +175,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
                 children: [
                   Particles(
                     pattern: _pattern,
+                    color: _color,
                     isBreathing: _isBreathing,
                     quantity: const [40, 40, 35],
                     diameter: const [4.0, 5.0, 6.0],
@@ -238,8 +240,14 @@ class _BreatheScreenState extends State<BreatheScreen> {
                 color: Colors.black,
                 child: Menu(
                     pattern: _pattern,
+                    color: _color,
                     hasVibrator: _hasVibrator,
                     vibrationEnabled: _vibrationEnabled,
+                    setColor: (Color color) {
+                      setState(() {
+                        _color = color;
+                      });
+                    },
                     onVibrationChange: (vibration) {
                       setState(() {
                         _vibrationEnabled = vibration;

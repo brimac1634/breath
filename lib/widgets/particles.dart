@@ -7,12 +7,14 @@ import '../models/pattern.dart';
 
 class Particles extends StatelessWidget {
   final Pattern pattern;
+  final Color color;
   final bool isBreathing;
   final List<int> quantity;
   final List<double> diameter;
 
   Particles(
       {@required this.pattern,
+      @required this.color,
       @required this.isBreathing,
       @required this.quantity,
       @required this.diameter});
@@ -31,6 +33,7 @@ class Particles extends StatelessWidget {
                   return Center(
                       child: ParticleContainer(
                           pattern: pattern,
+                          color: color,
                           diameter: diameter[index],
                           offsetRadius: min(_radius, 300),
                           isBreathing: isBreathing));

@@ -3,10 +3,9 @@ import 'dart:math';
 
 class Particle extends StatefulWidget {
   final double diameter;
+  final Color color;
 
-  Particle({
-    @required this.diameter,
-  });
+  Particle({@required this.diameter, @required this.color});
   @override
   _ParticleState createState() => _ParticleState();
 }
@@ -55,7 +54,7 @@ class _ParticleState extends State<Particle>
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xfffc00a3),
+                color: widget.color,
                 blurRadius: 10.0,
                 spreadRadius: 1.2,
               ),

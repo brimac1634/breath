@@ -8,12 +8,14 @@ import '../models/pattern.dart';
 
 class ParticleContainer extends StatefulWidget {
   final Pattern pattern;
+  final Color color;
   final bool isBreathing;
   final double diameter;
   final double offsetRadius;
 
   ParticleContainer(
       {@required this.pattern,
+      @required this.color,
       @required this.isBreathing,
       @required this.diameter,
       @required this.offsetRadius});
@@ -120,6 +122,7 @@ class _ParticleContainerState extends State<ParticleContainer>
             _xOffset * _translation.value, _yOffset * _translation.value),
         child: Particle(
           diameter: widget.diameter,
+          color: widget.color,
         ));
   }
 }

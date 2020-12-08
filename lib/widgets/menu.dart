@@ -1,23 +1,31 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:vibration/vibration.dart';
 
 import './incrementer.dart';
+import './color_picker.dart';
+
 import '../assets/breathe_icons.dart';
 
 import '../models/pattern.dart';
 
 class Menu extends StatelessWidget {
   final Pattern pattern;
+  final Color color;
   final bool hasVibrator;
   final bool vibrationEnabled;
+  final Function(Color) setColor;
   final Function onVibrationChange;
   final Function onPatternChange;
   final Function onSave;
 
   Menu(
       {@required this.pattern,
+      @required this.color,
       @required this.hasVibrator,
       @required this.vibrationEnabled,
+      @required this.setColor,
       @required this.onVibrationChange,
       @required this.onPatternChange,
       this.onSave});
@@ -128,39 +136,48 @@ class Menu extends StatelessWidget {
 
   Widget renderResetButton(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Opacity(
-          opacity: 1,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  'Vibration',
-                  style: Theme.of(context).textTheme.bodyText1,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: IconButton(
-                  iconSize: 50,
-                  icon: Icon(
-                    BreatheIcons.vibrate,
-                    color: vibrationEnabled ? Color(0xfffc00a3) : Colors.white,
-                    size: 50,
+      if (hasVibrator)
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Opacity(
+            opacity: 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Vibration',
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
-                  onPressed: () {
-                    if (!hasVibrator) return;
-                    if (!vibrationEnabled) Vibration.vibrate(duration: 150);
-                    onVibrationChange(!vibrationEnabled);
-                  },
                 ),
-              )
-            ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: IconButton(
+                    iconSize: 50,
+                    icon: Icon(
+                      BreatheIcons.vibrate,
+                      color: vibrationEnabled ? color : Colors.white,
+                      size: 50,
+                    ),
+                    onPressed: () {
+                      if (!hasVibrator) return;
+                      if (!vibrationEnabled) Vibration.vibrate(duration: 150);
+                      onVibrationChange(!vibrationEnabled);
+                    },
+                  ),
+                )
+              ],
+            ),
           ),
+        ),
+      Padding(
+        padding: const EdgeInsets.only(top: 12),
+        child: ColorPicker(
+          width: min(350, MediaQuery.of(context).size.width * 0.8),
+          currentColor: color,
+          setColor: setColor,
         ),
       ),
       SizedBox(
@@ -174,6 +191,7 @@ class Menu extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.0)),
         child: Text('Reset', style: Theme.of(context).textTheme.bodyText1),
         onPressed: () {
+          setColor(Color(0xfffc00a3));
           onPatternChange(Pattern(
               inhale: 5.5, exhale: 5.5, inhalePause: 0, exhalePause: 0));
           onVibrationChange(false);
