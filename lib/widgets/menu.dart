@@ -191,19 +191,16 @@ class _MenuState extends State<Menu> {
             ),
           ),
         ),
-      Padding(
-        padding: const EdgeInsets.only(top: 12),
-        child: ColorPicker(
-          width: _colorPickerWidth,
-          currentColor: widget.color,
-          setColor: widget.setColor,
-          colorSliderPosition: _colorSliderPosition,
-          setColorSliderPosition: (double position) {
-            setState(() {
-              _colorSliderPosition = position;
-            });
-          },
-        ),
+      ColorPicker(
+        width: _colorPickerWidth,
+        currentColor: widget.color,
+        setColor: widget.setColor,
+        colorSliderPosition: _colorSliderPosition,
+        setColorSliderPosition: (double position) {
+          setState(() {
+            _colorSliderPosition = position;
+          });
+        },
       ),
       SizedBox(
         height: 40,
