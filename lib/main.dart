@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 
 import './screens/breathe_screen.dart';
 
+final colorScheme = ColorScheme.fromSeed(
+  brightness: Brightness.dark,
+  seedColor: Colors.white,
+  background: Colors.black,
+);
+
 void main() {
   runApp(MyApp());
 }
@@ -15,13 +21,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.white,
         textTheme: TextTheme(
-          bodyText1: TextStyle(color: Colors.white, fontSize: 16.0),
-          subtitle1: TextStyle(color: Colors.blue, fontWeight: FontWeight.w900),
-          headline1: TextStyle(
+          bodyLarge: TextStyle(color: Colors.white, fontSize: 16.0),
+          titleMedium:
+              TextStyle(color: Colors.blue, fontWeight: FontWeight.w900),
+          displayLarge: TextStyle(
               color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.black,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        colorScheme: colorScheme,
       ),
       home: BreatheScreen(),
     );

@@ -14,11 +14,11 @@ class ParticleContainer extends StatefulWidget {
   final double offsetRadius;
 
   ParticleContainer(
-      {@required this.pattern,
-      @required this.color,
-      @required this.isBreathing,
-      @required this.diameter,
-      @required this.offsetRadius});
+      {required this.pattern,
+      required this.color,
+      required this.isBreathing,
+      required this.diameter,
+      required this.offsetRadius});
   @override
   _ParticleContainerState createState() => _ParticleContainerState();
 }
@@ -27,15 +27,15 @@ class _ParticleContainerState extends State<ParticleContainer>
     with SingleTickerProviderStateMixin {
   static const beginTween = 1.0;
   static const endTween = 0.01;
-  double _xOffset;
-  double _yOffset;
+  late double _xOffset;
+  late double _yOffset;
 
-  Timer _inhalePauseTimer;
-  Timer _exhalePauseTimer;
+  late Timer _inhalePauseTimer;
+  late Timer _exhalePauseTimer;
 
-  AnimationController _translateController;
-  Animation _curve;
-  Animation<double> _translation;
+  late AnimationController _translateController;
+  late Animation _curve;
+  late Animation<double> _translation;
 
   @override
   void initState() {
@@ -63,7 +63,7 @@ class _ParticleContainerState extends State<ParticleContainer>
     _translation = Tween<double>(
       begin: beginTween,
       end: endTween,
-    ).animate(_curve);
+    ).animate(_curve as Animation<double>);
   }
 
   @override
@@ -77,8 +77,7 @@ class _ParticleContainerState extends State<ParticleContainer>
     }
 
     if ((widget.pattern.inhale != oldWidget.pattern.inhale ||
-            widget.pattern.exhale != oldWidget.pattern.exhale) &&
-        _translateController != null) {
+        widget.pattern.exhale != oldWidget.pattern.exhale)) {
       _translateController.duration =
           Duration(milliseconds: (widget.pattern.exhale * 1000).toInt());
       _translateController.reverseDuration =

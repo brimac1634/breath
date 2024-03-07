@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class Incrementer extends StatelessWidget {
+class Incrementor extends StatelessWidget {
   final double value;
   final Function onChange;
 
-  Incrementer({@required this.value, @required this.onChange});
+  Incrementor({required this.value, required this.onChange});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class Incrementer extends StatelessWidget {
                   border: Border(right: BorderSide(color: Colors.white))),
               child: Text(
                 '-',
-                style: Theme.of(context).textTheme.headline1,
+                style: Theme.of(context).textTheme.displayLarge,
               ),
             ),
           ),
@@ -36,7 +36,7 @@ class Incrementer extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Text(
               value.toString(),
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),
           GestureDetector(
@@ -51,7 +51,7 @@ class Incrementer extends StatelessWidget {
                   border: Border(left: BorderSide(color: Colors.white))),
               child: Text(
                 '+',
-                style: Theme.of(context).textTheme.headline1,
+                style: Theme.of(context).textTheme.displayLarge,
               ),
             ),
           ),

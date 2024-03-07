@@ -13,11 +13,11 @@ class Particles extends StatelessWidget {
   final List<double> diameter;
 
   Particles(
-      {@required this.pattern,
-      @required this.color,
-      @required this.isBreathing,
-      @required this.quantity,
-      @required this.diameter});
+      {required this.pattern,
+      required this.color,
+      required this.isBreathing,
+      required this.quantity,
+      required this.diameter});
 
   @override
   Widget build(BuildContext context) {

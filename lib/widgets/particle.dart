@@ -5,7 +5,7 @@ class Particle extends StatefulWidget {
   final double diameter;
   final Color color;
 
-  Particle({@required this.diameter, @required this.color});
+  Particle({required this.diameter, required this.color});
   @override
   _ParticleState createState() => _ParticleState();
 }
@@ -13,9 +13,9 @@ class Particle extends StatefulWidget {
 class _ParticleState extends State<Particle>
     with SingleTickerProviderStateMixin {
   final _start = Random().nextDouble().round().toDouble();
-  double _offsetX;
-  double _offsetY;
-  AnimationController _rotateController;
+  late double _offsetX;
+  late double _offsetY;
+  late AnimationController _rotateController;
 
   @override
   void initState() {

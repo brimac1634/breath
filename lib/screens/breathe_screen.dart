@@ -31,11 +31,11 @@ class _BreatheScreenState extends State<BreatheScreen> {
   bool _hasVibrator = false;
   bool _vibrationEnabled = false;
 
-  Timer _animationTimer;
-  Timer _startTimer;
-  Timer _breathTimer;
-  Timer _breathInterval;
-  List<int> _vibrationPattern;
+  late Timer _animationTimer;
+  late Timer _startTimer;
+  late Timer _breathTimer;
+  late Timer _breathInterval;
+  late List<int> _vibrationPattern;
 
   @override
   void initState() {
@@ -55,8 +55,8 @@ class _BreatheScreenState extends State<BreatheScreen> {
   void _calculateVibration(Pattern pattern) {
     Vibration.hasVibrator().then((hasVibrator) {
       setState(() {
-        _hasVibrator = hasVibrator;
-        if (hasVibrator) {
+        _hasVibrator = hasVibrator ?? false;
+        if (_hasVibrator) {
           _vibrationPattern = _getVibrationPattern(
               incrementMultiple: 1.5,
               milliseconds: pattern.inhale * 1000,
@@ -69,7 +69,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
   }
 
   void _toggleAnimationAndVibration() {
-    if (_hasVibrator && _vibrationEnabled && _vibrationPattern != null) {
+    if (_hasVibrator && _vibrationEnabled) {
       if (!_isBreathing) {
         _breathTimer = Timer(
             Duration(
@@ -116,9 +116,9 @@ class _BreatheScreenState extends State<BreatheScreen> {
   }
 
   List<int> _getVibrationPattern(
-      {double incrementMultiple,
-      double milliseconds,
-      double vibrationDuration}) {
+      {required double incrementMultiple,
+      required double milliseconds,
+      required double vibrationDuration}) {
     var halfOfDuration = milliseconds / 2;
     var halfVibrationCount = (halfOfDuration * 0.0024).floor();
     var halfDurationLessVibrations =
@@ -157,11 +157,13 @@ class _BreatheScreenState extends State<BreatheScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (didPop) {
         if (_showingMenu) {
           _toggleMenu();
-          return false;
+          return;
+        } else {
+          Navigator.of(context).pop();
         }
       },
       child: Scaffold(
@@ -197,7 +199,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
                             opacity: !_showStart || _showingMenu ? 0.0 : 1.0,
                             child: Text(
                               'Tap to start',
-                              style: Theme.of(context).textTheme.headline1,
+                              style: Theme.of(context).textTheme.displayLarge,
                             ),
                           ),
                         ),
@@ -266,7 +268,7 @@ class _BreatheScreenState extends State<BreatheScreen> {
             ),
           )
         ]),
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
       ),
     );
   }

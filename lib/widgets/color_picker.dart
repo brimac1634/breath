@@ -8,11 +8,11 @@ class ColorPicker extends StatefulWidget {
   final Function(double) setColorSliderPosition;
 
   ColorPicker(
-      {@required this.width,
-      @required this.currentColor,
-      @required this.setColor,
-      @required this.colorSliderPosition,
-      @required this.setColorSliderPosition});
+      {required this.width,
+      required this.currentColor,
+      required this.setColor,
+      required this.colorSliderPosition,
+      required this.setColorSliderPosition});
   @override
   _ColorPickerState createState() => _ColorPickerState();
 }

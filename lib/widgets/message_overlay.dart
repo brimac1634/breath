@@ -10,9 +10,9 @@ class MessageOverlay extends HookWidget {
   final Pattern pattern;
 
   MessageOverlay(
-      {@required this.isBreathing,
-      @required this.animationCurve,
-      @required this.pattern});
+      {required this.isBreathing,
+      required this.animationCurve,
+      required this.pattern});
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +21,9 @@ class MessageOverlay extends HookWidget {
 
     useEffect(
       () {
-        Timer _breatheInTimer;
+        Timer? _breatheInTimer;
 
         if (!isBreathing) {
-          if (_breatheInTimer != null) {
-            _breatheInTimer.cancel();
-          }
           _showBreathMessage.value = false;
         } else {
           // step 1
@@ -75,9 +72,7 @@ class MessageOverlay extends HookWidget {
         }
 
         return () {
-          if (_breatheInTimer != null) {
-            _breatheInTimer.cancel();
-          }
+          _breatheInTimer?.cancel();
         };
       },
       [isBreathing],
@@ -95,7 +90,7 @@ class MessageOverlay extends HookWidget {
             curve: animationCurve,
             child: Text(
               _breathMessage.value,
-              style: Theme.of(context).textTheme.headline1,
+              style: Theme.of(context).textTheme.displayLarge,
             ),
           ),
         ));

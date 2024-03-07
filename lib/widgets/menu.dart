@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:vibration/vibration.dart';
 
-import './incrementer.dart';
+import 'incrementor.dart';
 import './color_picker.dart';
 
 import '../assets/breathe_icons.dart';
@@ -18,16 +18,16 @@ class Menu extends StatefulWidget {
   final Function(Color) setColor;
   final Function onVibrationChange;
   final Function onPatternChange;
-  final Function onSave;
+  final Function? onSave;
 
   Menu(
-      {@required this.pattern,
-      @required this.color,
-      @required this.hasVibrator,
-      @required this.vibrationEnabled,
-      @required this.setColor,
-      @required this.onVibrationChange,
-      @required this.onPatternChange,
+      {required this.pattern,
+      required this.color,
+      required this.hasVibrator,
+      required this.vibrationEnabled,
+      required this.setColor,
+      required this.onVibrationChange,
+      required this.onPatternChange,
       this.onSave});
 
   @override
@@ -62,9 +62,9 @@ class _MenuState extends State<Menu> {
               children: [
                 Text(
                   'Inhale Time',
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                Incrementer(
+                Incrementor(
                   value: widget.pattern.inhale,
                   onChange: (value) {
                     widget.onPatternChange(Pattern(
@@ -85,9 +85,9 @@ class _MenuState extends State<Menu> {
               children: [
                 Text(
                   'Exhale Time',
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                Incrementer(
+                Incrementor(
                   value: widget.pattern.exhale,
                   onChange: (value) {
                     widget.onPatternChange(Pattern(
@@ -108,9 +108,9 @@ class _MenuState extends State<Menu> {
               children: [
                 Text(
                   'Inhale Pause',
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                Incrementer(
+                Incrementor(
                   value: widget.pattern.inhalePause,
                   onChange: (value) {
                     widget.onPatternChange(Pattern(
@@ -131,9 +131,9 @@ class _MenuState extends State<Menu> {
               children: [
                 Text(
                   'Exhale Pause',
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                Incrementer(
+                Incrementor(
                   value: widget.pattern.exhalePause,
                   onChange: (value) {
                     widget.onPatternChange(Pattern(
@@ -166,7 +166,7 @@ class _MenuState extends State<Menu> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
                     'Vibration',
-                    style: Theme.of(context).textTheme.bodyText1,
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ),
                 Padding(
@@ -205,13 +205,16 @@ class _MenuState extends State<Menu> {
       SizedBox(
         height: 40,
       ),
-      OutlineButton(
-        highlightedBorderColor: const Color(0xfff0dfea),
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        borderSide:
-            BorderSide(color: Colors.white, width: 1, style: BorderStyle.solid),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.0)),
-        child: Text('Reset', style: Theme.of(context).textTheme.bodyText1),
+      OutlinedButton(
+        // highlightedBorderColor: const Color(0xfff0dfea),
+        // borderSide:
+        //     BorderSide(color: Colors.white, width: 1, style: BorderStyle.solid),
+        style: ButtonStyle(
+            padding: MaterialStateProperty.all(
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0)),
+            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6.0)))),
+        child: Text('Reset', style: Theme.of(context).textTheme.bodyLarge),
         onPressed: () {
           widget.setColor(Color(0xfffc00a3));
           widget.onPatternChange(Pattern(
@@ -262,7 +265,9 @@ class _MenuState extends State<Menu> {
                     size: 40.0,
                   ),
                   onPressed: () {
-                    widget.onSave();
+                    if (widget.onSave != null) {
+                      widget.onSave!();
+                    }
                   },
                 ),
               ))
